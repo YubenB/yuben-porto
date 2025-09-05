@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Global scrollbar hide */
+@layer base {
+  /* Firefox & legacy Edge/IE */
+  * {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+  /* WebKit-based browsers */
+  *::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}
