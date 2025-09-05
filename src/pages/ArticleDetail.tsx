@@ -38,7 +38,11 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
         <img
           src={thumbnail}
           alt={title}
-          className="mt-4 w-full h-auto rounded-md"
+          className="mt-2 w-full h-auto rounded-md"
+          loading="lazy"
+          decoding="async"
+          width="1200"
+          height="630"
         />
       )}
 

@@ -36,6 +36,10 @@ const Articles = () => (
                     src={article.thumbnail}
                     alt={article.title}
                     className="mt-2 w-full h-auto rounded-md"
+                    loading="lazy"
+                    decoding="async"
+                    width="1200"
+                    height="630"
                   />
                 )}
                 <p className="mt-2 text-sm text-neutral-400 max-w-xl">
