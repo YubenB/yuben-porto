@@ -1,7 +1,7 @@
 ---
 slug: run-a-cloud-native-app-with-kubernetes
 title: Run a Cloud-Native App With Kubernetes
-date: 5 August 2025
+date: 2025-08-05
 readingTime: 15 min read
 thumbnail: https://dcloud.co.id/blog/wp-content/uploads/2023/06/Komputasi-Kubernetes_Featured-Image.png
 excerpt: This post shares our high-level infrastructure patterns for running modern web apps at scale. It’s technology-specific enough to be useful, but intentionally free of environment-specific details like IPs, node counts, or internal service names.
