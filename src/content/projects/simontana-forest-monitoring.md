@@ -9,10 +9,12 @@ stack:
   - Mapbox
   - Firebase
 images:
-  - https://upload.wikimedia.org/wikipedia/commons/0/06/Logo_of_the_Ministry_of_Environmental_Affairs_and_Forestry_of_the_Republic_of_Indonesia.svg
+  - /images/projects/simontana/simontana_1.png
+  - /images/projects/simontana/simontana_2.png
+  - /images/projects/simontana/simontana_3.png
 ---
 
-The Simontana app empowers field agents with tools to report and monitor forest conditions in real time.
+SIMONTANA (National Forest Monitoring System) is a mobile app that provides fast, reliable access to forest data across Indonesia. It helps users monitor deforestation, reforestation, land cover changes, and forest degradation. The app supports effective forest management and contributes to the Environmental Quality Index (IKLH) reporting in each province.
 
 ### Capabilities
 
