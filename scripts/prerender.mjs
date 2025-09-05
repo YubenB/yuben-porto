@@ -32,6 +32,9 @@ async function writeHtmlForRoute(routePath, html, meta, template) {
     `<div id="root">${html}</div>`
   );
 
+  // remove default/meta/schema so we can inject page-specific ones
+  doc = stripDefaultHeadTags(doc);
+
   // replace title
   if (meta?.title) {
     doc = doc.replace(/<title>.*?<\/title>/, `<title>${meta.title}</title>`);
@@ -146,4 +149,21 @@ function escapeHtml(str) {
     .replace(/>/g, "&gt;")
     .replace(/\"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+function stripDefaultHeadTags(doc) {
+  // remove description meta
+  doc = doc.replace(/<meta[^>]+name=["']description["'][^>]*>\s*/gi, "");
+  // remove canonical
+  doc = doc.replace(/<link[^>]+rel=["']canonical["'][^>]*>\s*/gi, "");
+  // remove OG
+  doc = doc.replace(/<meta[^>]+property=["']og:[^"']+["'][^>]*>\s*/gi, "");
+  // remove Twitter
+  doc = doc.replace(/<meta[^>]+name=["']twitter:[^"']+["'][^>]*>\s*/gi, "");
+  // remove JSON-LD scripts
+  doc = doc.replace(
+    /<script[^>]+type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>\s*/gi,
+    ""
+  );
+  return doc;
 }
