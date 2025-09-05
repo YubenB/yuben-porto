@@ -1,12 +1,14 @@
-import { useMemo, useState } from "react";
+import {useMemo, useState} from "react";
 
-type Role = {
-  company: string;
+// 1. Renamed 'Role' to 'TimelineEvent' and made it more generic
+type TimelineEvent = {
+  organization: string;
   title: string;
   start: string; // ISO date
   end?: string; // ISO date or undefined for current
   current?: boolean;
-  responsibilities?: string[];
+  details?: string[];
+  logo?: string; // image path or URL
 };
 
 function formatDateRange(startISO: string, endISO?: string) {
@@ -27,7 +29,7 @@ function formatDuration(startISO: string, endISO?: string) {
   let months =
     (end.getFullYear() - start.getFullYear()) * 12 +
     (end.getMonth() - start.getMonth());
-  if (end.getDate() < start.getDate()) months -= 1; // rough adjust
+  if (end.getDate() < start.getDate()) months -= 1;
   const years = Math.floor(months / 12);
   const remMonths = months % 12;
   const parts: string[] = [];
@@ -36,39 +38,40 @@ function formatDuration(startISO: string, endISO?: string) {
   return parts.length ? parts.join(" ") : "< 1 mo";
 }
 
-// New component to handle individual role logic
-function RoleItem({ role }: { role: Role }) {
+// 2. Renamed 'RoleItem' to 'TimelineItem' to handle any timeline event
+function TimelineItem({event}: {event: TimelineEvent}) {
   const MAX_ITEMS = 5;
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const { responsibilities = [] } = role;
-  const hasMore = responsibilities.length > MAX_ITEMS;
+  const {details = [], logo} = event;
+  const hasMore = details.length > MAX_ITEMS;
 
-  const displayedResponsibilities =
-    hasMore && !isExpanded
-      ? responsibilities.slice(0, MAX_ITEMS)
-      : responsibilities;
+  const displayedDetails =
+    hasMore && !isExpanded ? details.slice(0, MAX_ITEMS) : details;
 
   return (
     <li className="rounded-xl border border-neutral-800 bg-neutral-900/40 p-4 sm:p-5">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-        <div>
-          <div className="text-lg font-semibold">{role.title}</div>
-          <div className="text-neutral-300">{role.company}</div>
+        <div className="flex items-center gap-3">
+          <img
+            src={logo || "/images/placeholder-logo.png"}
+            alt={event.organization + " logo"}
+            className="w-10 h-10 object-contain rounded bg-neutral-800 border border-neutral-700"
+            style={{minWidth: 40}}
+          />
+          <div>
+            <div className="text-lg font-semibold">{event.title}</div>
+            <div className="text-neutral-300">{event.organization}</div>
+          </div>
         </div>
         <div className="text-sm text-neutral-400 text-left sm:text-right">
-          <div>{formatDateRange(role.start, role.end)}</div>
-          <div className="mt-0.5">{formatDuration(role.start, role.end)}</div>
+          <div>{formatDateRange(event.start, event.end)}</div>
+          <div className="mt-0.5">{formatDuration(event.start, event.end)}</div>
         </div>
       </div>
-      {role.current && (
-        <div className="mt-3 inline-flex items-center rounded-full border border-green-900 bg-green-900/20 px-2 py-0.5 text-xs text-green-300">
-          Currently working
-        </div>
-      )}
-      {displayedResponsibilities.length > 0 && (
+      {displayedDetails.length > 0 && (
         <ul className="mt-4 list-disc list-inside space-y-1 text-sm text-neutral-300">
-          {displayedResponsibilities.map((item, i) => (
+          {displayedDetails.map((item, i) => (
             <li key={i}>{item}</li>
           ))}
         </ul>
@@ -86,14 +89,15 @@ function RoleItem({ role }: { role: Role }) {
 }
 
 export default function Experience() {
-  const roles: Role[] = useMemo(
+  const workExperience: TimelineEvent[] = useMemo(
     () => [
       {
-        company: "Rakhasa Artha Wisesa Corp",
+        organization: "Rakhasa Artha Wisesa Corp",
         title: "Backend Developer",
         start: "2024-10-23",
         current: true,
-        responsibilities: [
+        logo: "/images/companies/rakhasa_logo.jpeg",
+        details: [
           "Design and implement REST APIs with Node.js/TypeScript",
           "Build data models, migrations, and queries (PostgreSQL/Prisma)",
           "Integrate authentication/authorization and request validation",
@@ -116,11 +120,12 @@ export default function Experience() {
         ],
       },
       {
-        company: "Rapit Solution",
+        organization: "Rapit Solution",
         title: "Mobile Developer Freelance",
         start: "2023-07-06",
-        current: true,
-        responsibilities: [
+        end: "2024-07-06",
+        logo: "/images/companies/rapit_logo.jpeg",
+        details: [
           "Develop cross‑platform mobile apps (React Native)",
           "Implement responsive UI, navigation flows, and offline support",
           "Integrate APIs, push notifications, and third‑party SDKs",
@@ -132,20 +137,80 @@ export default function Experience() {
     []
   );
 
-  return (
-    <div className="space-y-8">
-      <header>
-        <h1 className="text-3xl font-bold tracking-tight">Experience</h1>
-        <p className="text-neutral-400 text-sm mt-1">
-          A quick look at my ongoing roles and contributions.
-        </p>
-      </header>
+  const educationHistory: TimelineEvent[] = useMemo(
+    () => [
+      {
+        organization: "Binus Online Learning",
+        title: "Bachelor of Computer Science",
+        start: "2023-08-11",
+        logo: "/images/educations/binus_logo.png",
+        details: [
+          "Specialized in software engineering and database management.",
+          "Key coursework: Data Structures, Algorithms, Web Development, and Systems Analysis.",
+          "Lead a team of four for the final year capstone project, developing a campus event management system.",
+        ],
+      },
+      {
+        organization: "Hacktiv8",
+        title: "Full-Stack Javascript Bootcamp",
+        start: "2024-06-11",
+        end: "2024-10-11",
+        logo: "/images/educations/hacktiv8_logo.png",
+        details: [
+          "Completed an intensive 6-month full-stack web development program.",
+          "Gained hands-on experience with JavaScript, Node.js, React, and databases.",
+          "Built multiple projects including a social media app and e-commerce site.",
+          "Collaborated in agile teams, using Git and version control.",
+          "Enhanced problem-solving skills through coding challenges and pair programming.",
+        ],
+      },
+      {
+        organization: "SMK Cyber Media",
+        title: "Vocational High School | Computer and Network Engineering",
+        start: "2020-05-01",
+        end: "2023-05-30",
+        logo: "/images/educations/cyber_media_logo.jpeg",
+        details: [
+          "Focused on computer hardware, networking, and basic programming.",
+          "Completed a capstone project on building a small office network.",
+          "Active member of the tech club, organizing coding workshops and hackathons.",
+        ],
+      },
+    ],
+    []
+  );
 
-      <ul className="space-y-6">
-        {roles.map((role, idx) => (
-          <RoleItem key={idx} role={role} />
-        ))}
-      </ul>
+  return (
+    <div className="space-y-12">
+      {/* Experience Section */}
+      <section>
+        <header>
+          <h1 className="text-3xl font-bold tracking-tight">Experience</h1>
+          <p className="text-neutral-400 text-sm mt-1">
+            A quick look at my ongoing roles and contributions.
+          </p>
+        </header>
+        <ul className="mt-8 space-y-6">
+          {workExperience.map((event, idx) => (
+            <TimelineItem key={idx} event={event} />
+          ))}
+        </ul>
+      </section>
+
+      {/* Education Section */}
+      <section>
+        <header>
+          <h1 className="text-3xl font-bold tracking-tight">Education</h1>
+          <p className="text-neutral-400 text-sm mt-1">
+            My academic background and qualifications.
+          </p>
+        </header>
+        <ul className="mt-8 space-y-6">
+          {educationHistory.map((event, idx) => (
+            <TimelineItem key={idx} event={event} />
+          ))}
+        </ul>
+      </section>
     </div>
   );
 }

@@ -19,7 +19,7 @@ Before diving into the code, let's establish the foundational concepts that ensu
 
 An order creation process involves multiple steps: validating items, reserving stock, creating an order record, and clearing the user's cart. If any of these steps fail, the entire operation should be rolled back to prevent inconsistent data (e.g., stock is reduced, but no order is created).
 
-This is achieved using database transactions. The entire `createOrder` logic is wrapped in `this.dataSource.transaction(async (manager) => { ... })`. This ensures all database operations within the block are treated as a single, atomic unit. They either all succeed, or they all fail.
+This is achieved using database transactions. The entire **createOrder** logic is wrapped in: `this.dataSource.transaction(async (manager) => { ... })` This ensures all database operations within the block are treated as a single, atomic unit. They either all succeed, or they all fail.
 
 ### 2\. Preventing Race Conditions with Pessimistic Locking
 
@@ -29,12 +29,12 @@ To prevent this, we use **pessimistic locking**. When we check a product variant
 
 ```typescript
 const variant = await productVariantRepo.findOne({
-  where: { id: item.productVariantId },
-  lock: { mode: "pessimistic_write" },
+  where: {id: item.productVariantId},
+  lock: {mode: "pessimistic_write"},
 });
 ```
 
-This lock (`pessimistic_write`) prevents any other transaction from reading or modifying that row until the current transaction is completed (either committed or rolled back). This effectively forces concurrent requests for the same item to be handled sequentially, guaranteeing an accurate stock check.
+This lock (**pessimistic_write**) prevents any other transaction from reading or modifying that row until the current transaction is completed (either committed or rolled back). This effectively forces concurrent requests for the same item to be handled sequentially, guaranteeing an accurate stock check.
 
 ### 3\. A Two-Phase Approach to Stock Management
 
@@ -73,8 +73,8 @@ This is the most critical section. We loop through each item the user wants to p
 for (const item of createOrderDto.items) {
   // 1. Lock the product variant row to prevent race conditions
   const variant = await productVariantRepo.findOne({
-    where: { id: item.productVariantId },
-    lock: { mode: "pessimistic_write" },
+    where: {id: item.productVariantId},
+    lock: {mode: "pessimistic_write"},
   });
 
   // 2. Perform validation checks
@@ -91,7 +91,7 @@ for (const item of createOrderDto.items) {
       reservedStock: () => "reservedStock + :quantity",
     })
     .where("id = :id AND stock >= :quantity") // Final check
-    .setParameters({ id: item.productVariantId, quantity: item.quantity })
+    .setParameters({id: item.productVariantId, quantity: item.quantity})
     .execute();
 
   // If the update fails (e.g., stock changed between the read and write), throw an error
@@ -105,7 +105,7 @@ for (const item of createOrderDto.items) {
 }
 ```
 
-Using `stock: () => 'stock - :quantity'` allows the database to perform the calculation directly, which is more robust and performant than reading the value, modifying it in the application, and writing it back.
+Using **stock: () => 'stock - :quantity'** allows the database to perform the calculation directly, which is more robust and performant than reading the value, modifying it in the application, and writing it back.
 
 ### Step 3: Create Order Records and Finalize
 
@@ -121,7 +121,7 @@ const savedOrder = await orderRepo.save(order);
 await orderItemRepo.save(itemsToCreate);
 
 // Clear the items from the user's cart
-await cartItemRepo.delete({ id: item.itemId });
+await cartItemRepo.delete({id: item.itemId});
 
 // Update the product's overall status (e.g., to OUT_OF_STOCK)
 await this.syncProductStockStatusInTransaction(productId, manager);
