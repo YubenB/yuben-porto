@@ -1,15 +1,15 @@
-import React from "react";
-import { ArrowLeft } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { ArrowLeft, ArrowUp } from "lucide-react";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm"; // for GitHub-flavored markdown
-import rehypeRaw from "rehype-raw"; // optional, allows raw HTML inside MD
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 import CodeBlock from "../components/ui/CodeBlock";
 
 export type ArticleDetailProps = {
   title: string;
   date: string;
   readingTime: string;
-  content: string; // Markdown string
+  content: string;
   onBack: () => void;
   thumbnail?: string;
 };
@@ -22,6 +22,20 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
   onBack,
   thumbnail,
 }) => {
+  const [showTopBtn, setShowTopBtn] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowTopBtn(window.scrollY > 100);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <article>
       <button
@@ -71,6 +85,16 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
           {content}
         </ReactMarkdown>
       </div>
+
+      {showTopBtn && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-neutral-800 text-white shadow-lg hover:bg-neutral-700 transition"
+          aria-label="Back to top"
+        >
+          <ArrowUp size={20} />
+        </button>
+      )}
     </article>
   );
 };
