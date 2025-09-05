@@ -1,7 +1,7 @@
 ---
 slug: scaling-nestjs-applications-with-microservices-and-rabbitmq
 title: Scaling NestJS Applications with Microservices and RabbitMQ
-date: 5 August 2025
+date: 2025-08-05
 readingTime: 15 min read
 thumbnail: https://cdn.intuji.com/2022/09/Nestjs_hero1.png
 excerpt: Modern web applications face increasing demands for scalability, maintainability, and performance. As monolithic architectures reach their limits, many development teams turn to microservices to address these challenges.

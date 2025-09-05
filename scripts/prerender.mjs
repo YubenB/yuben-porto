@@ -10,6 +10,8 @@ const distClient = path.join(root, "dist");
 const distServer = path.join(root, "dist-ssr");
 const ssrEntry = path.join(distServer, "entry-server.js");
 
+const SITE_URL = process.env.VITE_SITE_URL || "https://yuben.me";
+
 function ensureLeadingSlash(p) {
   return p.startsWith("/") ? p : `/${p}`;
 }
@@ -36,8 +38,41 @@ async function writeHtmlForRoute(routePath, html, meta, template) {
   }
   // inject meta description if provided
   if (meta?.description) {
-    const metaTag = `<meta name="description" content="${meta.description}">`;
+    const metaTag = `<meta name="description" content="${escapeHtml(
+      meta.description
+    )}">`;
     doc = doc.replace("</head>", `  ${metaTag}\n  </head>`);
+  }
+
+  // canonical link
+  const canonical = meta?.canonical || SITE_URL.replace(/\/$/, "") + route;
+  const canonicalTag = `<link rel="canonical" href="${canonical}">`;
+  doc = doc.replace("</head>", `  ${canonicalTag}\n  </head>`);
+
+  // Open Graph tags
+  if (meta?.og) {
+    const ogTags = Object.entries(meta.og)
+      .map(([k, v]) => `<meta property="${k}" content="${escapeHtml(v)}">`)
+      .join("\n  ");
+    doc = doc.replace("</head>", `  ${ogTags}\n  </head>`);
+  }
+  // Twitter tags
+  if (meta?.twitter) {
+    const twTags = Object.entries(meta.twitter)
+      .map(([k, v]) => `<meta name="${k}" content="${escapeHtml(v)}">`)
+      .join("\n  ");
+    doc = doc.replace("</head>", `  ${twTags}\n  </head>`);
+  }
+
+  // JSON-LD structured data
+  if (meta?.jsonLd?.length) {
+    const scripts = meta.jsonLd
+      .map(
+        (obj) =>
+          `<script type="application/ld+json">${JSON.stringify(obj)}</script>`
+      )
+      .join("\n  ");
+    doc = doc.replace("</head>", `  ${scripts}\n  </head>`);
   }
 
   await fs.writeFile(outPath, doc, "utf-8");
@@ -58,6 +93,25 @@ async function main() {
     const { html, meta } = await render(route);
     await writeHtmlForRoute(route, html, meta, template);
   }
+
+  // generate sitemap.xml
+  const urls = routes
+    .map(
+      (r) =>
+        `  <url><loc>${SITE_URL.replace(/\/$/, "")}${ensureLeadingSlash(
+          r
+        )}</loc></url>`
+    )
+    .join("\n");
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>`;
+  await fs.writeFile(path.join(distClient, "sitemap.xml"), sitemap, "utf-8");
+
+  // generate robots.txt
+  const robots = `User-agent: *\nAllow: /\nSitemap: ${SITE_URL.replace(
+    /\/$/,
+    ""
+  )}/sitemap.xml\n`;
+  await fs.writeFile(path.join(distClient, "robots.txt"), robots, "utf-8");
   // create 404.html as the homepage for static hosts that use it
   const { html, meta } = await render("/");
   await fs.writeFile(
@@ -84,3 +138,12 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}

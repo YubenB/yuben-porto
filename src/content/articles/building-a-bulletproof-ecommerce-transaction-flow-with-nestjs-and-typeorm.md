@@ -1,7 +1,7 @@
 ---
 slug: building-a-bulletproof-ecommerce-transaction-flow-with-nestjs-and-typeorm
 title: Building a Bulletproof E-commerce Transaction Flow with NestJS and TypeORM
-date: 5 August 2025
+date: 2025-08-05
 readingTime: 15 min read
 thumbnail: https://media2.dev.to/dynamic/image/width=1280,height=720,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fztuzxxv00drrj019la1h.jpg
 excerpt: Handling transactions is the most critical part of any e-commerce application. A single bug can lead to lost revenue, incorrect inventory, and frustrated customers. A robust system must guarantee data integrity, especially when dealing with concurrent user actions and interactions with third-party payment gateways.

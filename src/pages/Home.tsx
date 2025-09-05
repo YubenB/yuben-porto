@@ -10,34 +10,12 @@ const Home = () => {
         Software Engineer Crafting Modern Web & Mobile Solutions.
       </h1>
       <p className="mt-6 text-neutral-300 max-w-2xl text-base sm:text-lg leading-relaxed">
-        Hi, I’m Yuben, a passionate Software Engineer focused on backend
-        systems, mobile apps, and web development. Currently, I work as a
-        Backend Developer at Rakhasa Artha Wisesa, where I architect and scale
-        event-driven microservices using NestJS, Kafka, RabbitMQ, and Golang in
-        an Agile environment.
+        Hi, I’m Yuben Rizky Putra Bauty, a passionate Software Engineer focused
+        on backend systems, mobile apps, and web development. Currently, I work
+        as a Backend Developer at Rakhasa Artha Wisesa, where I architect and
+        scale event-driven microservices using NestJS, Kafka, RabbitMQ, and
+        Golang in an Agile environment.
         <br />
-        <br />
-        <span className="block font-semibold text-neutral-200 mt-2 mb-1">
-          Key achievements:
-        </span>
-        <ul className="list-disc list-inside ml-4 space-y-1">
-          <li>
-            Automated server provisioning pipelines for on-demand Linux VM
-            creation and deployment via SSH.
-          </li>
-          <li>
-            Integrated external services like Bunny.net and Cloudflare for
-            seamless DNS/CDN automation.
-          </li>
-          <li>
-            Designed flexible SEO and media infrastructure to support dynamic,
-            high-performance websites.
-          </li>
-          <li>
-            Managed multiple Go-based services, including Auth, Payments, and
-            Blast (email/WhatsApp) modules.
-          </li>
-        </ul>
         <br />
         Outside of work, I freelance on React Native mobile apps that solve
         real-world problems—from forest monitoring to insurance claim
