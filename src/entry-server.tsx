@@ -21,6 +21,7 @@ type SEO = {
 };
 
 const SITE_URL = (import.meta as any).env?.VITE_SITE_URL || "https://yuben.me";
+const PERSON_IMAGE = `${SITE_URL.replace(/\/$/, "")}/images/profile.jpg`;
 const SITE_NAME = "Yuben Bauty";
 const PERSON_NAME = "Yuben Rizky Putra Bauty";
 
@@ -32,6 +33,7 @@ function personJsonLd() {
     alternateName: "Yuben",
     url: SITE_URL,
     jobTitle: "Software Engineer",
+    image: [PERSON_IMAGE],
   };
 }
 
@@ -65,7 +67,11 @@ function getMeta(url: string): SEO {
           "@type": "Article",
           headline: a.title,
           description: a.excerpt,
-          author: { "@type": "Person", name: PERSON_NAME },
+          author: {
+            "@type": "Person",
+            name: PERSON_NAME,
+            image: [PERSON_IMAGE],
+          },
           datePublished: (() => {
             const d = new Date(a.date);
             return isNaN(d.getTime()) ? a.date : d.toISOString();
@@ -114,7 +120,11 @@ function getMeta(url: string): SEO {
           image: p.images?.length
             ? p.images.map((i) => SITE_URL + i)
             : undefined,
-          author: { "@type": "Person", name: PERSON_NAME },
+          author: {
+            "@type": "Person",
+            name: PERSON_NAME,
+            image: [PERSON_IMAGE],
+          },
         },
       ];
       const preview = p.images?.[0]
