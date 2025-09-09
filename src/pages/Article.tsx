@@ -8,7 +8,7 @@ const Articles = () => (
     <h2 className="text-3xl font-bold tracking-tighter">Thoughts & Insights</h2>
     <p className="mt-2 text-neutral-400">
       Exploring topics in software development, from backend architecture to
-      frontend magic.
+      frontend magic. Or something more casual.
     </p>
     <div className="mt-8 space-y-6">
       {articles.map((article, index) => (
