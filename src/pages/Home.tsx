@@ -10,7 +10,8 @@ const Home = () => {
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6 md:gap-8 items-center">
         <div className="order-2 md:order-1 md:col-span-3 text-center md:text-left">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter leading-tight md:leading-snug bg-clip-text text-transparent bg-gradient-to-br from-white to-neutral-400">
-            Software Engineer Crafting Modern Web & Mobile Solutions.
+            Yuben Bauty — Software Engineer crafting modern web & mobile
+            solutions.
           </h1>
           <p className="mt-6 text-neutral-300 max-w-2xl text-base sm:text-lg leading-relaxed mx-auto md:mx-0">
             Hi, I’m Yuben Rizky Putra Bauty, a passionate Software Engineer
