@@ -154,9 +154,30 @@ async function main() {
       .replace(
         /<title>.*?<\/title>/,
         `<title>${meta?.title ?? "Not Found"}</title>`
+      )
+      // add robots noindex on 404 to avoid indexing duplicates
+      .replace(
+        /<head>/i,
+        '<head>\n  <meta name="robots" content="noindex, nofollow">'
       ),
     "utf-8"
   );
+
+  // write _redirects to canonicalize common duplicate URLs
+  // Supported by Netlify and Cloudflare Pages
+  const redirects = [
+    // prefer https + apex domain
+    "http://yuben.me/* https://yuben.me/:splat 301",
+    "http://www.yuben.me/* https://yuben.me/:splat 301",
+    "https://www.yuben.me/* https://yuben.me/:splat 301",
+    // remove index.html duplicates safely
+    "/index.html / 301",
+    "/*/index.html /:splat 301",
+    // normalize trailing slash to no-slash for pages (assets with extensions unaffected)
+    "/*/ /:splat 301",
+    // NOTE: avoid a blanket trailing-slash removal to prevent breaking asset directories
+  ].join("\n");
+  await fs.writeFile(path.join(distClient, "_redirects"), redirects, "utf-8");
 }
 
 // helper to build file:// URL for dynamic import

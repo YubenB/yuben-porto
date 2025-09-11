@@ -20,7 +20,8 @@ type SEO = {
   jsonLd?: Array<Record<string, any>>; // multiple scripts if needed
 };
 
-const SITE_URL = (import.meta as any).env?.VITE_SITE_URL || "https://yuben.me";
+const RAW_SITE_URL = (import.meta as any).env?.VITE_SITE_URL || "https://yuben.me";
+const SITE_URL = normalizeSiteUrl(RAW_SITE_URL);
 const PERSON_IMAGE = `${SITE_URL.replace(/\/$/, "")}/images/profile.jpg`;
 const SITE_NAME = "Yuben Bauty";
 const PERSON_NAME = "Yuben Rizky Putra Bauty";
@@ -83,10 +84,31 @@ function websiteJsonLd() {
   };
 }
 
+function normalizeSiteUrl(url: string): string {
+  try {
+    const u = new URL(url);
+    // force https and apex (non-www) host to avoid duplicate canonicals
+    u.protocol = "https:";
+    u.hostname = u.hostname.replace(/^www\./, "");
+    // strip trailing slash
+    return u.origin;
+  } catch {
+    // fallback to default
+    return "https://yuben.me";
+  }
+}
+
+function canonicalizePath(p: string): string {
+  // remove trailing slash except for root
+  if (p !== "/" && p.endsWith("/")) return p.slice(0, -1);
+  return p;
+}
+
 function getMeta(url: string): SEO {
-  const fullUrl = SITE_URL.replace(/\/$/, "") + url;
-  if (url.startsWith("/articles/")) {
-    const slug = url.replace("/articles/", "");
+  const cleanPath = canonicalizePath(url);
+  const fullUrl = SITE_URL.replace(/\/$/, "") + cleanPath;
+  if (cleanPath.startsWith("/articles/")) {
+    const slug = cleanPath.replace("/articles/", "");
     const a = articles.find((x) => x.slug === slug);
     if (a) {
       const title = `${a.title} | ${SITE_NAME}`;
@@ -163,8 +185,8 @@ function getMeta(url: string): SEO {
       };
     }
   }
-  if (url.startsWith("/projects/")) {
-    const slug = url.replace("/projects/", "");
+  if (cleanPath.startsWith("/projects/")) {
+    const slug = cleanPath.replace("/projects/", "");
     const p = projectsContent.find((x) => x.slug === slug);
     if (p) {
       const title = `${p.title} | ${SITE_NAME}`;
@@ -233,7 +255,7 @@ function getMeta(url: string): SEO {
       };
     }
   }
-  switch (url) {
+  switch (cleanPath) {
     case "/projects":
       return {
         title: `Projects | ${SITE_NAME}`,
