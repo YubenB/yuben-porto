@@ -90,7 +90,8 @@ async function main() {
     templatePath = path.join(distClient, "client", "index.html");
   }
   const template = await fs.readFile(templatePath, "utf-8");
-  const { render, getRoutes } = await import(pathToFileURL(ssrEntry).href);
+  const mod = await import(pathToFileURL(ssrEntry).href);
+  const { render, getRoutes } = mod;
   const routes = getRoutes();
   for (const route of routes) {
     const { html, meta } = await render(route);
@@ -98,13 +99,15 @@ async function main() {
   }
 
   // generate sitemap.xml
-  const urls = routes
-    .map(
-      (r) =>
-        `  <url><loc>${SITE_URL.replace(/\/$/, "")}${ensureLeadingSlash(
-          r
-        )}</loc></url>`
-    )
+  const getSitemapEntries =
+    mod.getSitemapEntries || (() => routes.map((r) => ({ url: r })));
+  const entries = getSitemapEntries();
+  const urls = entries
+    .map(({ url, lastmod }) => {
+      const loc = `${SITE_URL.replace(/\/$/, "")}${ensureLeadingSlash(url)}`;
+      const lm = lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : "";
+      return `  <url>\n    <loc>${loc}</loc>${lm}\n  </url>`;
+    })
     .join("\n");
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>`;
   await fs.writeFile(path.join(distClient, "sitemap.xml"), sitemap, "utf-8");
@@ -115,6 +118,33 @@ async function main() {
     ""
   )}/sitemap.xml\n`;
   await fs.writeFile(path.join(distClient, "robots.txt"), robots, "utf-8");
+
+  // generate RSS feed (feed.xml)
+  const getFeedItems = mod.getFeedItems || (() => []);
+  const items = getFeedItems();
+  if (items && items.length) {
+    const feedItems = items
+      .map(
+        (i) =>
+          `  <item>\n    <title>${escapeXml(
+            i.title
+          )}</title>\n    <link>${escapeXml(
+            i.url
+          )}</link>\n    <guid>${escapeXml(i.url)}</guid>\n    ${
+            i.date ? `<pubDate>${escapeXml(i.date)}</pubDate>` : ""
+          }\n    ${
+            i.description
+              ? `<description>${escapeXml(i.description)}</description>`
+              : ""
+          }\n  </item>`
+      )
+      .join("\n");
+    const rss = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n<channel>\n  <title>Yuben Bauty - Articles</title>\n  <link>${SITE_URL.replace(
+      /\/$/,
+      ""
+    )}</link>\n  <description>Latest articles by Yuben Bauty</description>\n${feedItems}\n</channel>\n</rss>`;
+    await fs.writeFile(path.join(distClient, "feed.xml"), rss, "utf-8");
+  }
   // create 404.html as the homepage for static hosts that use it
   const { html, meta } = await render("/");
   await fs.writeFile(
@@ -124,9 +154,30 @@ async function main() {
       .replace(
         /<title>.*?<\/title>/,
         `<title>${meta?.title ?? "Not Found"}</title>`
+      )
+      // add robots noindex on 404 to avoid indexing duplicates
+      .replace(
+        /<head>/i,
+        '<head>\n  <meta name="robots" content="noindex, nofollow">'
       ),
     "utf-8"
   );
+
+  // write _redirects to canonicalize common duplicate URLs
+  // Supported by Netlify and Cloudflare Pages
+  const redirects = [
+    // prefer https + apex domain
+    "http://yuben.me/* https://yuben.me/:splat 301",
+    "http://www.yuben.me/* https://yuben.me/:splat 301",
+    "https://www.yuben.me/* https://yuben.me/:splat 301",
+    // remove index.html duplicates safely
+    "/index.html / 301",
+    "/*/index.html /:splat 301",
+    // normalize trailing slash to no-slash for pages (assets with extensions unaffected)
+    "/*/ /:splat 301",
+    // NOTE: avoid a blanket trailing-slash removal to prevent breaking asset directories
+  ].join("\n");
+  await fs.writeFile(path.join(distClient, "_redirects"), redirects, "utf-8");
 }
 
 // helper to build file:// URL for dynamic import
@@ -149,6 +200,10 @@ function escapeHtml(str) {
     .replace(/>/g, "&gt;")
     .replace(/\"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+function escapeXml(str) {
+  return escapeHtml(str);
 }
 
 function stripDefaultHeadTags(doc) {
