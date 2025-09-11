@@ -20,7 +20,8 @@ type SEO = {
   jsonLd?: Array<Record<string, any>>; // multiple scripts if needed
 };
 
-const RAW_SITE_URL = (import.meta as any).env?.VITE_SITE_URL || "https://yuben.me";
+const RAW_SITE_URL =
+  (import.meta as any).env?.VITE_SITE_URL || "https://yuben.me";
 const SITE_URL = normalizeSiteUrl(RAW_SITE_URL);
 const PERSON_IMAGE = `${SITE_URL.replace(/\/$/, "")}/images/profile.jpg`;
 const SITE_NAME = "Yuben Bauty";

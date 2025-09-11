@@ -3,7 +3,7 @@ slug: scaling-nestjs-applications-with-microservices-and-rabbitmq
 title: Scaling NestJS Applications with Microservices and RabbitMQ
 date: 2025-08-05
 readingTime: 15 min read
-thumbnail: https://cdn.intuji.com/2022/09/Nestjs_hero1.png
+thumbnail: /images/articles/scaling-nestjs-applications-with-microservices-and-rabbitmq-thumbnail.png
 excerpt: Modern web applications face increasing demands for scalability, maintainability, and performance. As monolithic architectures reach their limits, many development teams turn to microservices to address these challenges.
 ---
 
@@ -86,8 +86,8 @@ The API Gateway serves as the single entry point for client requests and routes 
 
 ```typescript
 // apps/api-gateway/src/main.ts
-import {NestFactory} from "@nestjs/core";
-import {AppModule} from "./app.module";
+import { NestFactory } from "@nestjs/core";
+import { AppModule } from "./app.module";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -99,10 +99,10 @@ bootstrap();
 
 ```typescript
 // apps/api-gateway/src/app.module.ts
-import {Module} from "@nestjs/common";
-import {ClientsModule, Transport} from "@nestjs/microservices";
-import {UserController} from "./controllers/user.controller";
-import {OrderController} from "./controllers/order.controller";
+import { Module } from "@nestjs/common";
+import { ClientsModule, Transport } from "@nestjs/microservices";
+import { UserController } from "./controllers/user.controller";
+import { OrderController } from "./controllers/order.controller";
 
 @Module({
   imports: [
@@ -140,9 +140,9 @@ export class AppModule {}
 
 ```typescript
 // apps/api-gateway/src/controllers/user.controller.ts
-import {Controller, Get, Post, Body, Param, Inject} from "@nestjs/common";
-import {ClientProxy} from "@nestjs/microservices";
-import {Observable} from "rxjs";
+import { Controller, Get, Post, Body, Param, Inject } from "@nestjs/common";
+import { ClientProxy } from "@nestjs/microservices";
+import { Observable } from "rxjs";
 
 @Controller("users")
 export class UserController {
@@ -152,17 +152,17 @@ export class UserController {
 
   @Get()
   findAll(): Observable<any[]> {
-    return this.userService.send({cmd: "get_users"}, {});
+    return this.userService.send({ cmd: "get_users" }, {});
   }
 
   @Get(":id")
   findOne(@Param("id") id: string): Observable<any> {
-    return this.userService.send({cmd: "get_user"}, {id});
+    return this.userService.send({ cmd: "get_user" }, { id });
   }
 
   @Post()
   create(@Body() userData: any): Observable<any> {
-    return this.userService.send({cmd: "create_user"}, userData);
+    return this.userService.send({ cmd: "create_user" }, userData);
   }
 }
 ```
@@ -173,9 +173,9 @@ export class UserController {
 
 ```typescript
 // apps/user-service/src/main.ts
-import {NestFactory} from "@nestjs/core";
-import {Transport, MicroserviceOptions} from "@nestjs/microservices";
-import {AppModule} from "./app.module";
+import { NestFactory } from "@nestjs/core";
+import { Transport, MicroserviceOptions } from "@nestjs/microservices";
+import { AppModule } from "./app.module";
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -200,25 +200,25 @@ bootstrap();
 
 ```typescript
 // apps/user-service/src/user.controller.ts
-import {Controller} from "@nestjs/common";
-import {MessagePattern, Payload} from "@nestjs/microservices";
-import {UserService} from "./user.service";
+import { Controller } from "@nestjs/common";
+import { MessagePattern, Payload } from "@nestjs/microservices";
+import { UserService } from "./user.service";
 
 @Controller()
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @MessagePattern({cmd: "get_users"})
+  @MessagePattern({ cmd: "get_users" })
   async getUsers() {
     return this.userService.findAll();
   }
 
-  @MessagePattern({cmd: "get_user"})
-  async getUser(@Payload() data: {id: string}) {
+  @MessagePattern({ cmd: "get_user" })
+  async getUser(@Payload() data: { id: string }) {
     return this.userService.findById(data.id);
   }
 
-  @MessagePattern({cmd: "create_user"})
+  @MessagePattern({ cmd: "create_user" })
   async createUser(@Payload() userData: any) {
     return this.userService.create(userData);
   }
@@ -229,9 +229,9 @@ export class UserController {
 
 ```typescript
 // apps/order-service/src/order.controller.ts
-import {Controller, Inject} from "@nestjs/common";
-import {MessagePattern, Payload, ClientProxy} from "@nestjs/microservices";
-import {OrderService} from "./order.service";
+import { Controller, Inject } from "@nestjs/common";
+import { MessagePattern, Payload, ClientProxy } from "@nestjs/microservices";
+import { OrderService } from "./order.service";
 
 @Controller()
 export class OrderController {
@@ -241,7 +241,7 @@ export class OrderController {
     private readonly notificationService: ClientProxy
   ) {}
 
-  @MessagePattern({cmd: "create_order"})
+  @MessagePattern({ cmd: "create_order" })
   async createOrder(@Payload() orderData: any) {
     const order = await this.orderService.create(orderData);
 
@@ -255,8 +255,8 @@ export class OrderController {
     return order;
   }
 
-  @MessagePattern({cmd: "get_orders"})
-  async getOrders(@Payload() data: {userId: string}) {
+  @MessagePattern({ cmd: "get_orders" })
+  async getOrders(@Payload() data: { userId: string }) {
     return this.orderService.findByUserId(data.userId);
   }
 }
@@ -291,9 +291,9 @@ export class OrderCreatedEvent extends BaseEvent {
 
 ```typescript
 // apps/notification-service/src/notification.controller.ts
-import {Controller} from "@nestjs/common";
-import {EventPattern, Payload, Ctx, RmqContext} from "@nestjs/microservices";
-import {NotificationService} from "./notification.service";
+import { Controller } from "@nestjs/common";
+import { EventPattern, Payload, Ctx, RmqContext } from "@nestjs/microservices";
+import { NotificationService } from "./notification.service";
 
 @Controller()
 export class NotificationController {
@@ -320,9 +320,9 @@ export class NotificationController {
 
 ```typescript
 // apps/notification-service/src/main.ts
-import {NestFactory} from "@nestjs/core";
-import {Transport, MicroserviceOptions} from "@nestjs/microservices";
-import {AppModule} from "./app.module";
+import { NestFactory } from "@nestjs/core";
+import { Transport, MicroserviceOptions } from "@nestjs/microservices";
+import { AppModule } from "./app.module";
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -356,15 +356,15 @@ bootstrap();
 
 ```typescript
 // libs/common/src/health/rabbitmq-health.indicator.ts
-import {Injectable} from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import {
   HealthIndicator,
   HealthIndicatorResult,
   HealthCheckError,
 } from "@nestjs/terminus";
-import {ClientProxy} from "@nestjs/microservices";
-import {timeout, catchError} from "rxjs/operators";
-import {of} from "rxjs";
+import { ClientProxy } from "@nestjs/microservices";
+import { timeout, catchError } from "rxjs/operators";
+import { of } from "rxjs";
 
 @Injectable()
 export class RabbitMQHealthIndicator extends HealthIndicator {
@@ -375,7 +375,7 @@ export class RabbitMQHealthIndicator extends HealthIndicator {
   async isHealthy(key: string): Promise<HealthIndicatorResult> {
     try {
       const result = await this.client
-        .send({cmd: "health_check"}, {})
+        .send({ cmd: "health_check" }, {})
         .pipe(
           timeout(5000),
           catchError(() => of(null))
@@ -412,8 +412,8 @@ import {
   CallHandler,
   Logger,
 } from "@nestjs/common";
-import {Observable} from "rxjs";
-import {tap} from "rxjs/operators";
+import { Observable } from "rxjs";
+import { tap } from "rxjs/operators";
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
@@ -443,9 +443,9 @@ export class LoggingInterceptor implements NestInterceptor {
 
 ```typescript
 // apps/user-service/src/user.controller.spec.ts
-import {Test, TestingModule} from "@nestjs/testing";
-import {UserController} from "./user.controller";
-import {UserService} from "./user.service";
+import { Test, TestingModule } from "@nestjs/testing";
+import { UserController } from "./user.controller";
+import { UserService } from "./user.service";
 
 describe("UserController", () => {
   let controller: UserController;
@@ -482,9 +482,9 @@ describe("UserController", () => {
 
 ```typescript
 // test/integration/user-service.e2e-spec.ts
-import {Test, TestingModule} from "@nestjs/testing";
-import {ClientsModule, Transport} from "@nestjs/microservices";
-import {AppModule} from "../apps/api-gateway/src/app.module";
+import { Test, TestingModule } from "@nestjs/testing";
+import { ClientsModule, Transport } from "@nestjs/microservices";
+import { AppModule } from "../apps/api-gateway/src/app.module";
 
 describe("User Service (e2e)", () => {
   let app;
@@ -502,9 +502,9 @@ describe("User Service (e2e)", () => {
   });
 
   it("should create a user", async () => {
-    const userData = {name: "John Doe", email: "john@example.com"};
+    const userData = { name: "John Doe", email: "john@example.com" };
     const result = await client
-      .send({cmd: "create_user"}, userData)
+      .send({ cmd: "create_user" }, userData)
       .toPromise();
 
     expect(result).toHaveProperty("id");
@@ -575,7 +575,7 @@ spec:
 
 ```typescript
 // libs/common/src/config/rabbitmq.config.ts
-import {registerAs} from "@nestjs/config";
+import { registerAs } from "@nestjs/config";
 
 export default registerAs("rabbitmq", () => ({
   url: process.env.RABBITMQ_URL || "amqp://localhost:5672",
@@ -592,7 +592,7 @@ export default registerAs("rabbitmq", () => ({
 
 ```typescript
 // libs/common/src/rabbitmq/connection.service.ts
-import {Injectable, OnModuleDestroy} from "@nestjs/common";
+import { Injectable, OnModuleDestroy } from "@nestjs/common";
 import * as amqp from "amqp-connection-manager";
 
 @Injectable()
@@ -628,8 +628,8 @@ export class RabbitMQConnectionService implements OnModuleDestroy {
 
 ```typescript
 // libs/common/src/serializers/custom.serializer.ts
-import {Serializer} from "@nestjs/microservices";
-import {Logger} from "@nestjs/common";
+import { Serializer } from "@nestjs/microservices";
+import { Logger } from "@nestjs/common";
 
 export class CustomSerializer implements Serializer {
   private readonly logger = new Logger(CustomSerializer.name);
@@ -653,7 +653,7 @@ export class CustomSerializer implements Serializer {
 
 ```typescript
 // libs/common/src/circuit-breaker/circuit-breaker.service.ts
-import {Injectable} from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 
 enum CircuitState {
   CLOSED,
