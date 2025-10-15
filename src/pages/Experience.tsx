@@ -1,4 +1,4 @@
-import {useMemo, useState} from "react";
+import { useMemo, useState } from "react";
 
 // 1. Renamed 'Role' to 'TimelineEvent' and made it more generic
 type TimelineEvent = {
@@ -39,11 +39,11 @@ function formatDuration(startISO: string, endISO?: string) {
 }
 
 // 2. Renamed 'RoleItem' to 'TimelineItem' to handle any timeline event
-function TimelineItem({event}: {event: TimelineEvent}) {
+function TimelineItem({ event }: { event: TimelineEvent }) {
   const MAX_ITEMS = 5;
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const {details = [], logo} = event;
+  const { details = [], logo } = event;
   const hasMore = details.length > MAX_ITEMS;
 
   const displayedDetails =
@@ -57,7 +57,7 @@ function TimelineItem({event}: {event: TimelineEvent}) {
             src={logo || "/images/placeholder-logo.png"}
             alt={event.organization + " logo"}
             className="w-10 h-10 object-contain rounded bg-neutral-800 border border-neutral-700"
-            style={{minWidth: 40}}
+            style={{ minWidth: 40 }}
           />
           <div>
             <div className="text-lg font-semibold">{event.title}</div>
