@@ -29,7 +29,7 @@ export const projects: Project[] = [
     title: "Intra Asia | Insurance App",
     slug: "intra-asia-insurance",
     category: "React Native",
-    logo: "https://aaui.or.id/wp-content/uploads/2021/06/2PT-Asuransi-Intra-Asia.png",
+    logo: "/images/companies/intra-asia-logo.png",
     description:
       "A comprehensive mobile app for an automobile insurance provider, streamlining claims and policy management.",
   },
@@ -52,5 +52,15 @@ export const projects: Project[] = [
     logo: "https://www.fvi-group.com/images/logo.png",
     description:
       "A sleek and modern company profile website, designed to showcase brand identity and services effectively.",
+  },
+  {
+    icon: Code,
+    iconColor: "text-rose-400",
+    title: "HHH | Corporate Company Profile",
+    slug: "hhh-company-profile",
+    category: "Next.js",
+    logo: "/images/companies/hamparan-harapan-hayati-logo.png",
+    description:
+      "A professional company profile website for an agricultural enterprise, highlighting their mission and projects.",
   },
 ];
