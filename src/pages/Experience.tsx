@@ -95,7 +95,8 @@ export default function Experience() {
         organization: "Rakhasa Artha Wisesa Corp",
         title: "Backend Developer",
         start: "2024-10-23",
-        current: true,
+        end: "2025-10-23",
+        // current: true,
         logo: "/images/companies/rakhasa_logo.jpeg",
         details: [
           "Design and implement REST APIs with Node.js/TypeScript",
