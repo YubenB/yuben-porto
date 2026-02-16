@@ -38,11 +38,11 @@ function personJsonLd() {
     familyName: PERSON_FAMILY,
     alternateName: "Yuben",
     url: SITE_URL,
-    jobTitle: "Software Engineer",
+    jobTitle: "Senior Backend Engineer",
     image: [PERSON_IMAGE],
     worksFor: {
       "@type": "Organization",
-      name: "Rakhasa Artha Wisesa",
+      name: "Offshore Digital Platform (Confidential)",
     },
     alumniOf: [
       {
