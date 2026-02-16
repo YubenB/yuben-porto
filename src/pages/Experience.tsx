@@ -92,6 +92,25 @@ export default function Experience() {
   const workExperience: TimelineEvent[] = useMemo(
     () => [
       {
+        organization: "Offshore Digital Platform (Confidential)",
+        title: "Full-Stack Engineer (Contract)",
+        start: "2025-10-28",
+        current: true,
+        logo: "/images/companies/lock.png",
+        details: [
+          "Architected and developed a high-concurrency enterprise web platform using CodeIgniter 4 (PHP 8).",
+          "Designed and implemented a modular multi-provider webhook engine handling 10+ third-party integrations with HMAC, API key, and IP-based authentication.",
+          "Built an idempotent transaction processing system ensuring atomic balance updates and financial data consistency.",
+          "Developed a configurable rule-based incentive engine including cashback, referral rewards, and volume-based bonus logic.",
+          "Implemented a secure administrative dashboard with role-based access control (RBAC), granular permissions, and full audit logging.",
+          "Engineered deposit and withdrawal workflows with multi-step verification and transaction reconciliation safeguards.",
+          "Designed normalized relational database schemas with optimized indexing strategies for high read/write throughput.",
+          "Integrated multiple external REST APIs with request transformation, structured logging, retry mechanisms, and error handling.",
+          "Applied clean architecture principles (Service Layer, Repository, Factory, Guard patterns) to ensure scalability and maintainability.",
+          "Led end-to-end fullstack system design and business logic implementation, ensuring security, performance, and operational reliability.",
+        ],
+      },
+      {
         organization: "Rakhasa Artha Wisesa Corp",
         title: "Backend Developer",
         start: "2024-10-23",
@@ -135,7 +154,7 @@ export default function Experience() {
         ],
       },
     ],
-    []
+    [],
   );
 
   const educationHistory: TimelineEvent[] = useMemo(
@@ -178,7 +197,7 @@ export default function Experience() {
         ],
       },
     ],
-    []
+    [],
   );
 
   return (
