@@ -92,8 +92,8 @@ export default function Experience() {
   const workExperience: TimelineEvent[] = useMemo(
     () => [
       {
-        organization: "Offshore Digital Platform (Confidential)",
-        title: "Full-Stack Engineer (Contract)",
+        organization: "Digital Platform Indonesia",
+        title: "Full-Stack Engineer (Freelance)",
         start: "2025-10-28",
         current: true,
         logo: "/images/companies/lock.png",
