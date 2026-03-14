@@ -22,9 +22,9 @@ const Home = () => {
             architectures.
             <br />
             <br />
-            Currently working as a Full-Stack Engineer (Contract) for a
-            confidential offshore digital platform, I architect and maintain a
-            large-scale transactional system built with PHP 8 and CodeIgniter 4.
+            Currently working as a Full-Stack Developer (Freelance) for a
+            Digital Platform Indonesia, I architect and maintain a large-scale
+            transactional system built with PHP 8 and CodeIgniter 4.
             {isExpanded && (
               <>
                 <span> </span>The platform integrates with 10+ external service

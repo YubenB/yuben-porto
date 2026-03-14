@@ -42,7 +42,7 @@ function personJsonLd() {
     image: [PERSON_IMAGE],
     worksFor: {
       "@type": "Organization",
-      name: "Offshore Digital Platform (Confidential)",
+      name: "Digital Platform Indonesia",
     },
     alumniOf: [
       {
@@ -365,7 +365,7 @@ export async function render(url: string) {
   const html = renderToString(
     <StaticRouter location={url}>
       <App />
-    </StaticRouter>
+    </StaticRouter>,
   );
   const meta = getMeta(url);
   return { html, meta };
