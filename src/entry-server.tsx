@@ -24,21 +24,32 @@ const RAW_SITE_URL =
   (import.meta as any).env?.VITE_SITE_URL || "https://yuben.me";
 const SITE_URL = normalizeSiteUrl(RAW_SITE_URL);
 const PERSON_IMAGE = `${SITE_URL.replace(/\/$/, "")}/images/profile.jpg`;
-const SITE_NAME = "Yuben Bauty";
+const SITE_NAME = "Yuben Rizky Putra Bauty";
 const PERSON_NAME = "Yuben Rizky Putra Bauty";
 const PERSON_GIVEN = "Yuben";
 const PERSON_FAMILY = "Bauty";
+const PERSON_NICKNAME = "Yuben";
 
 function personJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "Person",
+    "@id": `${SITE_URL}#person`,
     name: PERSON_NAME,
+    additionalName: "Rizky Putra",
+    nickname: PERSON_NICKNAME,
     givenName: PERSON_GIVEN,
     familyName: PERSON_FAMILY,
-    alternateName: "Yuben",
+    alternateName: [
+      "Yuben",
+      "Yuben Bauty",
+      "Yuben Rizky Putra Bauty",
+      "Yuben Putra Bauty",
+    ],
     url: SITE_URL,
-    jobTitle: "Senior Backend Engineer",
+    jobTitle: "Full-Stack Software Engineer",
+    description:
+      "Yuben Rizky Putra Bauty (Yuben) is a Full-Stack Software Engineer focused on backend architecture, high-concurrency transaction systems, and scalable microservices.",
     image: [PERSON_IMAGE],
     worksFor: {
       "@type": "Organization",
@@ -71,11 +82,32 @@ function personJsonLd() {
   };
 }
 
+function homepageJsonLd(fullUrl: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    mainEntity: {
+      "@id": `${SITE_URL}#person`,
+      "@type": "Person",
+      name: PERSON_NAME,
+      alternateName: ["Yuben", "Yuben Bauty"],
+      url: SITE_URL,
+      image: [PERSON_IMAGE],
+      jobTitle: "Full-Stack Software Engineer",
+    },
+    url: fullUrl,
+    name: `${PERSON_NAME} (Yuben) - Portfolio`,
+    description:
+      "Official portfolio website of Yuben Rizky Putra Bauty (Yuben), Full-Stack Software Engineer.",
+    inLanguage: "en",
+  };
+}
+
 function websiteJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: SITE_NAME,
+    name: `${PERSON_NAME} (Yuben) - Portfolio`,
     url: SITE_URL,
     potentialAction: {
       "@type": "SearchAction",
@@ -259,39 +291,39 @@ function getMeta(url: string): SEO {
   switch (cleanPath) {
     case "/projects":
       return {
-        title: `Projects | ${SITE_NAME}`,
-        description: "Freelance & personal projects.",
+        title: `Projects | ${PERSON_NAME} (Yuben)`,
+        description: `${PERSON_NAME} (Yuben) - freelance and personal software engineering projects.`,
         canonical: fullUrl,
         og: {
           "og:type": "website",
-          "og:title": `Projects | ${SITE_NAME}`,
-          "og:description": "Freelance & personal projects.",
+          "og:title": `Projects | ${PERSON_NAME} (Yuben)`,
+          "og:description": `${PERSON_NAME} (Yuben) - freelance and personal software engineering projects.`,
           "og:url": fullUrl,
           "og:site_name": SITE_NAME,
         },
         twitter: {
           "twitter:card": "summary",
-          "twitter:title": `Projects | ${SITE_NAME}`,
-          "twitter:description": "Freelance & personal projects.",
+          "twitter:title": `Projects | ${PERSON_NAME} (Yuben)`,
+          "twitter:description": `${PERSON_NAME} (Yuben) - freelance and personal software engineering projects.`,
         },
         jsonLd: [personJsonLd(), websiteJsonLd()],
       };
     case "/articles":
       return {
-        title: `Articles | ${SITE_NAME}`,
-        description: "Thoughts & insights on software development.",
+        title: `Articles | ${PERSON_NAME} (Yuben)`,
+        description: `${PERSON_NAME} (Yuben) - thoughts and insights on software development.`,
         canonical: fullUrl,
         og: {
           "og:type": "website",
-          "og:title": `Articles | ${SITE_NAME}`,
-          "og:description": "Thoughts & insights on software development.",
+          "og:title": `Articles | ${PERSON_NAME} (Yuben)`,
+          "og:description": `${PERSON_NAME} (Yuben) - thoughts and insights on software development.`,
           "og:url": fullUrl,
           "og:site_name": SITE_NAME,
         },
         twitter: {
           "twitter:card": "summary",
-          "twitter:title": `Articles | ${SITE_NAME}`,
-          "twitter:description": "Thoughts & insights on software development.",
+          "twitter:title": `Articles | ${PERSON_NAME} (Yuben)`,
+          "twitter:description": `${PERSON_NAME} (Yuben) - thoughts and insights on software development.`,
         },
         jsonLd: [personJsonLd(), websiteJsonLd()],
       };
@@ -318,32 +350,32 @@ function getMeta(url: string): SEO {
       };
     case "/contact":
       return {
-        title: `Contact | ${SITE_NAME}`,
+        title: `Contact | ${PERSON_NAME} (Yuben)`,
         description: `Get in touch with ${PERSON_NAME}.`,
         canonical: fullUrl,
         og: {
           "og:type": "website",
-          "og:title": `Contact | ${SITE_NAME}`,
+          "og:title": `Contact | ${PERSON_NAME} (Yuben)`,
           "og:description": `Get in touch with ${PERSON_NAME}.`,
           "og:url": fullUrl,
           "og:site_name": SITE_NAME,
         },
         twitter: {
           "twitter:card": "summary",
-          "twitter:title": `Contact | ${SITE_NAME}`,
+          "twitter:title": `Contact | ${PERSON_NAME} (Yuben)`,
           "twitter:description": `Get in touch with ${PERSON_NAME}.`,
         },
         jsonLd: [personJsonLd(), websiteJsonLd()],
       };
     default:
       return {
-        title: `${SITE_NAME} | Software Engineer`,
-        description: `${PERSON_NAME} builds modern web & mobile solutions with React, React Native, NestJS, and more.`,
+        title: `${PERSON_NAME} (Yuben) | Full-Stack Software Engineer`,
+        description: `Official portfolio of ${PERSON_NAME}, also known as ${PERSON_NICKNAME}. Full-Stack Software Engineer building high-concurrency backend systems, financial platforms, and scalable microservices.`,
         canonical: fullUrl,
         og: {
           "og:type": "profile",
-          "og:title": `${SITE_NAME} | Software Engineer`,
-          "og:description": `${PERSON_NAME} builds modern web & mobile solutions with React, React Native, NestJS, and more.`,
+          "og:title": `${PERSON_NAME} (Yuben) | Full-Stack Software Engineer`,
+          "og:description": `Official portfolio of ${PERSON_NAME}, also known as ${PERSON_NICKNAME}. Full-Stack Software Engineer building high-concurrency backend systems, financial platforms, and scalable microservices.`,
           "og:url": fullUrl,
           "og:site_name": SITE_NAME,
           "profile:first_name": PERSON_GIVEN,
@@ -352,11 +384,11 @@ function getMeta(url: string): SEO {
         },
         twitter: {
           "twitter:card": "summary",
-          "twitter:title": `${SITE_NAME} | Software Engineer`,
-          "twitter:description": `${PERSON_NAME} builds modern web & mobile solutions with React, React Native, NestJS, and more.`,
+          "twitter:title": `${PERSON_NAME} (Yuben) | Full-Stack Software Engineer`,
+          "twitter:description": `Official portfolio of ${PERSON_NAME}, also known as ${PERSON_NICKNAME}. Full-Stack Software Engineer building high-concurrency backend systems, financial platforms, and scalable microservices.`,
           "twitter:image": PERSON_IMAGE,
         },
-        jsonLd: [personJsonLd(), websiteJsonLd()],
+        jsonLd: [personJsonLd(), websiteJsonLd(), homepageJsonLd(fullUrl)],
       };
   }
 }

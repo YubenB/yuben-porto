@@ -1,6 +1,6 @@
 import { Briefcase, Mail } from "lucide-react";
 import InteractiveButton from "../components/ui/InteractiveButton";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const Home = () => {
@@ -13,13 +13,13 @@ const Home = () => {
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6 md:gap-8 items-center">
         <div className="order-2 md:order-1 md:col-span-3 text-center md:text-left">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter leading-tight md:leading-snug bg-clip-text text-transparent bg-gradient-to-br from-white to-neutral-400">
-            Yuben Bauty | Software Engineer
+            Yuben Rizky Putra Bauty (Yuben) | Software Engineer
           </h1>
           <p className="mt-6 text-neutral-300 max-w-2xl text-base sm:text-lg leading-relaxed mx-auto md:mx-0">
-            I am a Full-Stack Software Engineer with strong backend
-            specialization, experienced in designing high-concurrency enterprise
-            systems, financial transaction platforms, and scalable microservices
-            architectures.
+            I am Yuben Rizky Putra Bauty, often called Yuben, a Full-Stack
+            Software Engineer with strong backend specialization, experienced in
+            designing high-concurrency enterprise systems, financial transaction
+            platforms, and scalable microservices architectures.
             <br />
             <br />
             Currently working as a Full-Stack Developer (Freelance) for a
@@ -131,6 +131,38 @@ const Home = () => {
           ))}
         </div>
       </div>
+
+      <section className="mt-14 rounded-xl border border-neutral-800 bg-neutral-900/40 p-5 sm:p-6">
+        <h2 className="text-lg font-semibold text-white">
+          About Yuben Rizky Putra Bauty
+        </h2>
+        <p className="mt-3 text-sm sm:text-base leading-relaxed text-neutral-300">
+          If you were searching for <strong>Yuben Rizky Putra Bauty</strong>,
+          you are in the right place. This is the official portfolio of Yuben,
+          featuring software engineering projects, technical articles, and
+          professional experience.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-3 text-sm">
+          <Link
+            to="/projects"
+            className="text-sky-300 hover:text-sky-200 underline underline-offset-4"
+          >
+            View Yuben Rizky Putra Bauty projects
+          </Link>
+          <Link
+            to="/articles"
+            className="text-sky-300 hover:text-sky-200 underline underline-offset-4"
+          >
+            Read articles by Yuben
+          </Link>
+          <Link
+            to="/contact"
+            className="text-sky-300 hover:text-sky-200 underline underline-offset-4"
+          >
+            Contact Yuben Rizky Putra Bauty
+          </Link>
+        </div>
+      </section>
     </div>
   );
 };
