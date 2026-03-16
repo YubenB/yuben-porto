@@ -50,8 +50,9 @@ const Contact = () => {
     }
   };
 
-  interface HandleChangeEvent
-    extends React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> {}
+  interface HandleChangeEvent extends React.ChangeEvent<
+    HTMLInputElement | HTMLTextAreaElement
+  > {}
 
   const handleChange = (e: HandleChangeEvent) => {
     const { name, value } = e.target;
@@ -59,7 +60,7 @@ const Contact = () => {
   };
 
   const onSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
+    e: React.FormEvent<HTMLFormElement>,
   ): Promise<void> => {
     e.preventDefault();
     const { name, email, message } = form;
@@ -112,7 +113,7 @@ const Contact = () => {
           reply_to: form.email,
           message: form.message,
         },
-        publicKey
+        publicKey,
       );
       setStatus({
         type: "success",
@@ -152,7 +153,7 @@ const Contact = () => {
         <p className="mt-2 text-neutral-400">
           I’m always open to discussing new projects, creative ideas, or
           opportunities to be part of an ambitious vision. Feel free to reach
-          out.
+          out to Yuben Rizky Putra Bauty (Yuben).
         </p>
       </div>
 
@@ -274,7 +275,7 @@ const Contact = () => {
                 href="https://www.linkedin.com/in/yuben-bauty/"
                 className="text-neutral-400 hover:text-white transition-colors"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="me noopener noreferrer"
               >
                 LinkedIn
               </a>
@@ -282,7 +283,7 @@ const Contact = () => {
                 href="https://github.com/yubenB/"
                 className="text-neutral-400 hover:text-white transition-colors"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="me noopener noreferrer"
               >
                 GitHub
               </a>
@@ -290,7 +291,7 @@ const Contact = () => {
                 href="https://www.instagram.com/yuben.rpb"
                 className="text-neutral-400 hover:text-white transition-colors"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="me noopener noreferrer"
               >
                 Instagram
               </a>
