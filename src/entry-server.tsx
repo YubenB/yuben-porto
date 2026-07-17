@@ -49,11 +49,11 @@ function personJsonLd() {
     url: SITE_URL,
     jobTitle: "Full-Stack Software Engineer",
     description:
-      "Yuben Rizky Putra Bauty (Yuben) is a Full-Stack Software Engineer focused on backend architecture, high-concurrency transaction systems, and scalable microservices.",
+      "Yuben Rizky Putra Bauty (Yuben) is a Full-Stack Software Engineer and AI Agentic Engineer focused on integration-heavy platforms, agentic AI/RAG workflows, and high-concurrency backend systems.",
     image: [PERSON_IMAGE],
     worksFor: {
       "@type": "Organization",
-      name: "Digital Platform Indonesia",
+      name: "Hexacode Teknologi Indonesia",
     },
     alumniOf: [
       {
@@ -72,6 +72,9 @@ function personJsonLd() {
       "PostgreSQL",
       "TypeScript",
       "Go",
+      "PHP",
+      "Agentic AI",
+      "RAG",
     ],
     sameAs: [
       "https://www.linkedin.com/in/yuben-bauty/",
@@ -367,15 +370,16 @@ function getMeta(url: string): SEO {
         },
         jsonLd: [personJsonLd(), websiteJsonLd()],
       };
-    default:
+    default: {
+      const description = `Official portfolio of ${PERSON_NAME}, also known as ${PERSON_NICKNAME}. Full-Stack Software Engineer building agentic AI platforms, high-concurrency backend systems, and integration-heavy applications.`;
       return {
         title: `${PERSON_NAME} (Yuben) | Full-Stack Software Engineer`,
-        description: `Official portfolio of ${PERSON_NAME}, also known as ${PERSON_NICKNAME}. Full-Stack Software Engineer building high-concurrency backend systems, financial platforms, and scalable microservices.`,
+        description,
         canonical: fullUrl,
         og: {
           "og:type": "profile",
           "og:title": `${PERSON_NAME} (Yuben) | Full-Stack Software Engineer`,
-          "og:description": `Official portfolio of ${PERSON_NAME}, also known as ${PERSON_NICKNAME}. Full-Stack Software Engineer building high-concurrency backend systems, financial platforms, and scalable microservices.`,
+          "og:description": description,
           "og:url": fullUrl,
           "og:site_name": SITE_NAME,
           "profile:first_name": PERSON_GIVEN,
@@ -385,11 +389,12 @@ function getMeta(url: string): SEO {
         twitter: {
           "twitter:card": "summary",
           "twitter:title": `${PERSON_NAME} (Yuben) | Full-Stack Software Engineer`,
-          "twitter:description": `Official portfolio of ${PERSON_NAME}, also known as ${PERSON_NICKNAME}. Full-Stack Software Engineer building high-concurrency backend systems, financial platforms, and scalable microservices.`,
+          "twitter:description": description,
           "twitter:image": PERSON_IMAGE,
         },
         jsonLd: [personJsonLd(), websiteJsonLd(), homepageJsonLd(fullUrl)],
       };
+    }
   }
 }
 

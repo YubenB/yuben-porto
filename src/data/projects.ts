@@ -16,6 +16,16 @@ export const projects: Project[] = [
   {
     icon: Code,
     iconColor: "text-cyan-400",
+    title: "Hexa AI | On-Prem AI Infrastructure",
+    slug: "hexa-ai",
+    category: "Agentic",
+    logo: "/images/companies/hexacode_logo.png",
+    description:
+      "Hexa is an AI-powered platform that automates document-heavy compliance and audit work for enterprise clients.",
+  },
+  {
+    icon: Code,
+    iconColor: "text-cyan-400",
     title: "Simontana | Forest Monitoring App",
     slug: "simontana-forest-monitoring",
     category: "React Native",
