@@ -24,7 +24,7 @@ const featuredWork = [
     name: "Hexa.Sensor",
     category: "Backend · Industrial IoT",
     description: "Field telemetry, fleet monitoring, event detection, and alarms in one on-premise platform.",
-    image: "/images/projects/hexa-sensor/overview.png",
+    image: "/images/projects/hexa-sensor/live-map.png",
     className: "",
   },
 ];
