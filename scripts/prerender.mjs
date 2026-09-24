@@ -43,7 +43,7 @@ async function writeHtmlForRoute(routePath, html, meta, template) {
 
   // replace title
   if (meta?.title) {
-    doc = doc.replace(/<title>.*?<\/title>/, `<title>${meta.title}</title>`);
+    doc = doc.replace(/<title>[\s\S]*?<\/title>/, `<title>${meta.title}</title>`);
   }
   // inject meta description if provided
   if (meta?.description) {

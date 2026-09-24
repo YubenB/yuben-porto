@@ -1,58 +1,27 @@
-import { projects } from "../data/projects";
+import { ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
-import React from "react";
+import { projects } from "../data/projects";
+
+const projectImages: Record<string, string> = {
+  "hexa-ai": "/images/projects/hexa-ai/control-plane-hero.webp",
+  "hexa-dashboard": "/images/projects/hexa-dashboard/overview.png",
+  "hexa-sensor": "/images/projects/hexa-sensor/overview.png",
+  "simontana-forest-monitoring": "/images/projects/simontana/simontana_1.png",
+  "intra-asia-insurance": "/images/projects/intra-asia/1.jpg",
+  "erzengel-ecommerce": "/images/projects/erzengel/home.png",
+  "fvi-company-profile": "/images/projects/fvi/hero.png",
+  "hhh-company-profile": "/images/projects/hhh/home.png",
+};
 
 const Projects = () => (
-  <div>
-    <h2 className="text-3xl font-bold tracking-tighter">
-      Freelance & Personal Projects
-    </h2>
-    <p className="mt-2 text-neutral-400">
-      A selection of my work, demonstrating my skills in building real-world
-      applications.
-    </p>
-    <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div className="inner-page projects-page">
+    <div className="page-intro"><p className="section-kicker">Projects</p><h1>Work that went <em>into the world.</em></h1><p>A selection of platforms, automation workflows, and applications I've helped build across AI, backend, web, and mobile.</p></div>
+    <div className="project-list">
       {projects.map((project, index) => (
-        <motion.div
-          key={project.title}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: index * 0.1 }}
-          className="bg-neutral-900/50 border border-neutral-800 p-6 rounded-lg hover:border-neutral-700 transition-all duration-300 group"
-        >
-          <Link
-            to={`/projects/${encodeURIComponent((project as any).slug || "")}`}
-            className="block focus:outline-none"
-          >
-            <div className="flex items-start justify-between">
-              {project.logo ? (
-                <img
-                  src={project.logo}
-                  alt={`${project.title} logo`}
-                  className="h-8"
-                />
-              ) : (
-                React.createElement(project.icon)
-              )}
-              <span className="text-xs font-medium text-neutral-500 bg-neutral-800/50 px-2 py-1 rounded-full">
-                {project.category}
-              </span>
-            </div>
-            <h3 className="mt-4 text-lg font-semibold text-white">
-              {project.title}
-            </h3>
-            <p className="mt-2 text-sm text-neutral-400">
-              {project.description}
-            </p>
-            <div className="mt-4">
-              <span className="text-sm font-medium text-cyan-400 flex items-center group-hover:translate-x-1 transition-transform duration-300">
-                View Case Study <ArrowRight size={14} className="ml-1" />
-              </span>
-            </div>
-          </Link>
-        </motion.div>
+        <Link to={`/projects/${project.slug}`} key={project.slug} className="project-list-item">
+          <div className="project-list-image"><img src={projectImages[project.slug || ""]} alt={`${project.title} interface`} loading={index < 2 ? "eager" : "lazy"} /></div>
+          <div className="project-list-copy"><span className="project-index">{String(index + 1).padStart(2, "0")} / {project.category}</span><h2>{project.title}</h2><p>{project.description}</p><span className="project-view">View case study <ArrowUpRight size={18} strokeWidth={1.7} /></span></div>
+        </Link>
       ))}
     </div>
   </div>

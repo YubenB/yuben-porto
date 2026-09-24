@@ -43,34 +43,18 @@ function TimelineItem({ event }: { event: TimelineEvent }) {
   const MAX_ITEMS = 5;
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const { details = [], logo } = event;
+  const { details = [] } = event;
   const hasMore = details.length > MAX_ITEMS;
 
   const displayedDetails =
     hasMore && !isExpanded ? details.slice(0, MAX_ITEMS) : details;
 
   return (
-    <li className="rounded-xl border border-neutral-800 bg-neutral-900/40 p-4 sm:p-5">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-        <div className="flex items-center gap-3">
-          <img
-            src={logo || "/images/placeholder-logo.png"}
-            alt={event.organization + " logo"}
-            className="w-10 h-10 object-contain rounded bg-neutral-800 border border-neutral-700"
-            style={{ minWidth: 40 }}
-          />
-          <div>
-            <div className="text-lg font-semibold">{event.title}</div>
-            <div className="text-neutral-300">{event.organization}</div>
-          </div>
-        </div>
-        <div className="text-sm text-neutral-400 text-left sm:text-right">
-          <div>{formatDateRange(event.start, event.end)}</div>
-          <div className="mt-0.5">{formatDuration(event.start, event.end)}</div>
-        </div>
-      </div>
+    <li className="timeline-item">
+      <div className="timeline-date"><div>{formatDateRange(event.start, event.end)}</div><div>{formatDuration(event.start, event.end)}</div></div>
+      <div className="timeline-role"><h3>{event.title}</h3><p className="organization">{event.organization}</p>
       {displayedDetails.length > 0 && (
-        <ul className="mt-4 list-disc list-inside space-y-1 text-sm text-neutral-300">
+        <ul>
           {displayedDetails.map((item, i) => (
             <li key={i}>{item}</li>
           ))}
@@ -79,11 +63,12 @@ function TimelineItem({ event }: { event: TimelineEvent }) {
       {hasMore && (
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="mt-3 text-sm font-semibold text-sky-400 hover:text-sky-300"
+          type="button"
         >
           {isExpanded ? "View less" : "View more"}
         </button>
       )}
+      </div>
     </li>
   );
 }
@@ -212,31 +197,20 @@ export default function Experience() {
   );
 
   return (
-    <div className="space-y-12">
-      {/* Experience Section */}
-      <section>
-        <header>
-          <h1 className="text-3xl font-bold tracking-tight">Experience</h1>
-          <p className="text-neutral-400 text-sm mt-1">
-            A quick look at my ongoing roles and contributions.
-          </p>
-        </header>
-        <ul className="mt-8 space-y-6">
+    <div className="inner-page experience-page">
+      <div className="page-intro"><p className="section-kicker">Experience</p><h1>Across the stack, <em>closer to the problem.</em></h1><p>From backend systems and mobile apps to enterprise AI workflows, these are the teams and products I've worked with.</p></div>
+      <section className="experience-group" aria-labelledby="work-experience-title">
+        <h2 id="work-experience-title">Work</h2>
+        <ul className="timeline-list">
           {workExperience.map((event, idx) => (
             <TimelineItem key={idx} event={event} />
           ))}
         </ul>
       </section>
 
-      {/* Education Section */}
-      <section>
-        <header>
-          <h1 className="text-3xl font-bold tracking-tight">Education</h1>
-          <p className="text-neutral-400 text-sm mt-1">
-            My academic background and qualifications.
-          </p>
-        </header>
-        <ul className="mt-8 space-y-6">
+      <section className="experience-group" aria-labelledby="education-title">
+        <h2 id="education-title">Education</h2>
+        <ul className="timeline-list">
           {educationHistory.map((event, idx) => (
             <TimelineItem key={idx} event={event} />
           ))}

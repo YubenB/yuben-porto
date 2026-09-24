@@ -1,138 +1,98 @@
-import { Briefcase, Mail } from "lucide-react";
-import InteractiveButton from "../components/ui/InteractiveButton";
-import { Link, useNavigate } from "react-router-dom";
+import { ArrowUpRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { articles } from "../data/articles";
 
-const Home = () => {
-  const navigate = useNavigate();
+const featuredWork = [
+  {
+    slug: "hexa-ai",
+    name: "Hexa.AI",
+    category: "Enterprise AI · Platform Engineering",
+    description: "A sovereign control plane for composing, governing, deploying, and operating reusable AI capabilities across customer-controlled infrastructure.",
+    image: "/images/projects/hexa-ai/control-plane-hero.webp",
+    className: "work-featured",
+  },
+  {
+    slug: "hexa-dashboard",
+    name: "Hexa.Dashboard",
+    category: "Full-stack · Analytics",
+    description: "A self-hosted workspace that turns operational data into dashboards, spatial analysis, and evidence-backed AI insights.",
+    image: "/images/projects/hexa-dashboard/overview.png",
+    className: "",
+  },
+  {
+    slug: "hexa-sensor",
+    name: "Hexa.Sensor",
+    category: "Backend · Industrial IoT",
+    description: "Field telemetry, fleet monitoring, event detection, and alarms in one on-premise platform.",
+    image: "/images/projects/hexa-sensor/overview.png",
+    className: "",
+  },
+];
 
-  return (
-    <div>
-      {/* Hero */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 md:gap-8 items-center">
-        <div className="order-2 md:order-1 md:col-span-3 text-center md:text-left">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter leading-tight md:leading-snug bg-clip-text text-transparent bg-gradient-to-br from-white to-neutral-400">
-            Yuben Rizky Putra Bauty | Software Engineer
-          </h1>
-          <p className="mt-6 text-neutral-300 max-w-2xl text-base sm:text-lg leading-relaxed mx-auto md:mx-0">
-            I am Yuben Rizky Putra Bauty, often called Yuben, a backend-focused
-            Full-Stack Software Engineer building integration-heavy platforms,
-            agentic AI workflows, and high-concurrency backend systems.
-            <br />
-            <br />I currently work at Hexacode Teknologi Indonesia as a
-            Full-Stack Developer / AI Agentic Engineer, building an on-premise
-            agentic AI platform for enterprise banking, alongside a remote
-            freelance role architecting a webhook system and admin dashboard for
-            a digital platform. Previously, I was a Backend Developer at Rakhasa
-            Artha Wisesa, working with Node.js, PostgreSQL, RabbitMQ/Kafka, and
-            Go-based schedulers.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-4 justify-center md:justify-start">
-            <InteractiveButton
-              href="/contact"
-              icon={<Mail size={16} />}
-              onClick={(e) => {
-                e.preventDefault();
-                navigate("/contact");
-              }}
-            >
-              Contact Me
-            </InteractiveButton>
-            <InteractiveButton
-              href="/projects"
-              icon={<Briefcase size={16} />}
-              variant="secondary"
-              onClick={(e) => {
-                e.preventDefault();
-                navigate("/projects");
-              }}
-            >
-              View My Work
-            </InteractiveButton>
-          </div>
-        </div>
-        <div className="order-1 md:order-2 md:col-span-2 md:justify-self-end">
-          <img
-            src="/images/profile.jpg"
-            alt="Portrait of Yuben Rizky Putra Bauty"
-            width="320"
-            height="320"
-            loading="eager"
-            fetchPriority="high"
-            sizes="(min-width: 768px) 18rem, 14rem"
-            className="mx-auto md:mx-0 h-56 w-56 sm:h-64 sm:w-64 md:h-72 md:w-72 rounded-full object-cover shadow-lg ring-1 ring-neutral-800 md:scale-[1.25] scale-[1]"
-            style={{ objectPosition: "center" }}
-          />
+const Home = () => (
+  <div className="home-page">
+    <section className="hero" aria-labelledby="hero-title">
+      <div className="hero-copy">
+        <p className="hero-intro">Yuben Bauty <span className="intro-divider" /> Full-stack developer &amp; AI automation</p>
+        <h1 id="hero-title">Making complex work <em>run itself.</em></h1>
+        <p className="hero-description">I build reliable software and AI workflows for the work that takes too many tabs, too many steps, and too much time.</p>
+        <div className="hero-actions">
+          <Link className="button button-dark" to="/projects">Explore my work <ArrowUpRight size={18} strokeWidth={1.8} /></Link>
+          <Link className="text-action" to="/contact">Get in touch <span aria-hidden="true">↗</span></Link>
         </div>
       </div>
-
-      <div className="mt-16">
-        <h2 className="text-sm font-semibold text-neutral-400 uppercase tracking-widest">
-          Core Technologies
-        </h2>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {[
-            "JavaScript",
-            "TypeScript",
-            "Go",
-            "Python",
-            "PHP",
-            "Node.js",
-            "NestJS",
-            "React",
-            "Next.js",
-            "React Native",
-            "PostgreSQL",
-            "Docker",
-            "Kubernetes",
-            "RabbitMQ",
-            "Kafka",
-            "Agentic",
-            "RAG",
-          ].map((tech) => (
-            <span
-              key={tech}
-              className="inline-flex items-center rounded-full border border-neutral-800 bg-black/40 px-3 py-1 text-xs sm:text-sm text-neutral-300 transition-colors hover:border-neutral-700 hover:bg-black/60"
-              aria-label={tech}
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
+      <div className="hero-visual">
+        <div className="portrait-frame"><img src="/images/profile.jpg" alt="Yuben Bauty seated by a window" fetchPriority="high" /></div>
+        <p className="portrait-caption">Based in Indonesia. Building for real-world complexity.</p>
       </div>
+    </section>
 
-      <section className="mt-14 rounded-xl border border-neutral-800 bg-neutral-900/40 p-5 sm:p-6">
-        <h2 className="text-lg font-semibold text-white">
-          About Yuben Rizky Putra Bauty
-        </h2>
-        <p className="mt-3 text-sm sm:text-base leading-relaxed text-neutral-300">
-          If you were searching for <strong>Yuben Rizky Putra Bauty</strong>,
-          you are in the right place. This is the official portfolio of Yuben,
-          featuring software engineering projects, technical articles, and
-          professional experience.
-        </p>
-        <div className="mt-4 flex flex-wrap gap-3 text-sm">
-          <Link
-            to="/projects"
-            className="text-sky-300 hover:text-sky-200 underline underline-offset-4"
-          >
-            View Yuben Rizky Putra Bauty projects
+    <div className="hero-bottom-line"><span>Code that connects systems.</span><span>Automation that earns trust.</span></div>
+
+    <section className="work-section" aria-labelledby="work-title">
+      <div className="section-heading">
+        <div><p className="section-kicker">Selected work</p><h2 id="work-title">Built for the messy parts.</h2></div>
+        <Link to="/projects" className="text-action">All projects <span aria-hidden="true">↗</span></Link>
+      </div>
+      <div className="work-grid">
+        {featuredWork.map((work) => (
+          <Link to={`/projects/${work.slug}`} className={`work-card ${work.className}`} key={work.slug}>
+            <div className="work-image"><img src={work.image} alt={`${work.name} interface`} loading="lazy" /></div>
+            <div className="work-info">
+              <p>{work.category}</p>
+              <div className="work-title-row"><h3>{work.name}</h3><ArrowUpRight size={24} strokeWidth={1.5} aria-hidden="true" /></div>
+              <span>{work.description}</span>
+            </div>
           </Link>
-          <Link
-            to="/articles"
-            className="text-sky-300 hover:text-sky-200 underline underline-offset-4"
-          >
-            Read articles by Yuben
-          </Link>
-          <Link
-            to="/contact"
-            className="text-sky-300 hover:text-sky-200 underline underline-offset-4"
-          >
-            Contact Yuben Rizky Putra Bauty
-          </Link>
-        </div>
-      </section>
-    </div>
-  );
-};
+        ))}
+      </div>
+    </section>
+
+    <section className="approach-section" aria-labelledby="approach-title">
+      <div className="approach-lead">
+        <p className="section-kicker">The way I work</p>
+        <h2 id="approach-title">A good system does more than look smart.</h2>
+        <p>It handles edge cases, fits the people using it, and keeps working after the demo ends.</p>
+      </div>
+      <div className="approach-list">
+        <div><span>01</span><h3>Understand the workflow</h3><p>Map the people, data, approvals, and failure points before writing code.</p></div>
+        <div><span>02</span><h3>Build the whole path</h3><p>From interface to API to deployment, make each part work together.</p></div>
+        <div><span>03</span><h3>Keep AI accountable</h3><p>Ground outputs in sources, add review steps, and make decisions traceable.</p></div>
+      </div>
+    </section>
+
+    <section className="about-section" aria-labelledby="about-title">
+      <div className="about-heading"><h2 id="about-title">Developer by trade.<br />Systems thinker by habit.</h2></div>
+      <div className="about-copy"><p>I'm Yuben Rizky Putra Bauty, a full-stack developer currently working on enterprise AI at Hexacode Teknologi Indonesia. My work spans agentic workflows, on-premise deployments, backend architecture, and the interfaces people use to run them.</p><p>Before that, I built backend services and automation with Node.js, Go, PostgreSQL, and messaging systems. I still enjoy getting close to the infrastructure when the product needs it.</p><Link className="text-action" to="/experience">More about my experience <span aria-hidden="true">↗</span></Link></div>
+    </section>
+
+    <section className="writing-section" aria-labelledby="writing-title">
+      <div className="section-heading"><div><h2 id="writing-title">Notes from the build.</h2></div><Link to="/articles" className="text-action">All articles <span aria-hidden="true">↗</span></Link></div>
+      <div className="writing-list">{articles.slice(0, 3).map((article) => <Link key={article.slug} to={`/articles/${article.slug}`} className="writing-item"><span>{article.date}</span><h3>{article.title}</h3><ArrowUpRight size={19} strokeWidth={1.7} aria-hidden="true" /></Link>)}</div>
+    </section>
+
+    <section className="home-contact" aria-labelledby="contact-title"><h2 id="contact-title">Let's make the work <em>work better.</em></h2><Link className="button button-light" to="/contact">Start a conversation <ArrowUpRight size={18} strokeWidth={1.8} /></Link></section>
+  </div>
+);
 
 export default Home;

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { articles } from "../data/articles";
 import ArticleDetail from "./ArticleDetail";
 
@@ -12,14 +12,9 @@ const ArticleDetailRoute = () => {
   if (!article) {
     // simple not-found handling; could render a 404 page
     return (
-      <div className="py-10">
-        <p className="text-neutral-400">Article not found.</p>
-        <button
-          className="mt-4 underline"
-          onClick={() => navigate("/articles")}
-        >
-          Back to Articles
-        </button>
+      <div className="reading-page">
+        <h1>Article not found.</h1>
+        <Link className="back-link" to="/articles">Back to Articles ↗</Link>
       </div>
     );
   }

@@ -1,17 +1,15 @@
+@import "@fontsource-variable/space-grotesk/wght.css";
+@import "@fontsource/ibm-plex-mono/latin-400.css";
+@import "@fontsource/ibm-plex-mono/latin-500.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Global scrollbar hide */
-@layer base {
-  /* Firefox & legacy Edge/IE */
-  * {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
-  }
-  /* WebKit-based browsers */
-  *::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-  }
-}
+:root { font-family: "Space Grotesk Variable", sans-serif; color: #20251f; background: #f1eee7; font-synthesis: none; }
+html { scroll-behavior: smooth; }
+body { margin: 0; }
+* { box-sizing: border-box; }
+::selection { background: #d3a38c; color: #20251f; }
+:focus-visible { outline: 2px solid #bd5636; outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }

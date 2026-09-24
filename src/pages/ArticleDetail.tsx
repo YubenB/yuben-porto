@@ -37,22 +37,22 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
   };
 
   return (
-    <article>
+    <article className="reading-page article-detail" id="article-top">
       <button
         onClick={onBack}
-        className="inline-flex items-center gap-2 text-sm text-neutral-400 hover:text-white"
+        className="back-link"
       >
         <ArrowLeft size={16} /> Back to Articles
       </button>
-      <h1 className="mt-4 text-3xl font-bold tracking-tighter">{title}</h1>
-      <p className="mt-1 text-sm text-neutral-500">
+      <h1>{title}</h1>
+      <p className="reading-meta">
         {date} • {readingTime}
       </p>
       {thumbnail && (
         <img
           src={thumbnail}
           alt={title}
-          className="mt-2 w-full h-auto rounded-md"
+          className="reading-hero-image"
           loading="lazy"
           decoding="async"
           width="1200"
@@ -60,7 +60,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
         />
       )}
 
-      <div className="prose prose-invert prose-neutral max-w-none mt-6">
+      <div className="prose prose-neutral max-w-none">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           rehypePlugins={[rehypeRaw]}
@@ -71,7 +71,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
               if (inline) {
                 return (
                   <code
-                    className="px-1.5 py-0.5 rounded-md  border border-neutral-800 text-neutral-200"
+                    className="px-1.5 py-0.5"
                     {...props}
                   >
                     {children}
@@ -89,7 +89,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
       {showTopBtn && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-neutral-800 text-white shadow-lg hover:bg-neutral-700 transition"
+          className="back-to-top"
           aria-label="Back to top"
         >
           <ArrowUp size={20} />

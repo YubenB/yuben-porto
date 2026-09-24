@@ -1,303 +1,82 @@
 import { useState } from "react";
 import emailjs from "@emailjs/browser";
-import { AlertTriangle, CheckCircle, Loader, Mail, Send } from "lucide-react";
-import InteractiveButton from "../components/ui/InteractiveButton";
+import { ArrowUpRight } from "lucide-react";
 
-interface ContactForm {
-  name: string;
-  email: string;
-  message: string;
-}
+type ContactForm = { name: string; email: string; message: string };
+type ContactStatus = { type: "" | "error" | "success"; message: string };
+type RateLimitRecord = { date: string; count: number };
+const STORAGE_KEY = "contact_rate_limit";
+
+const todayKey = () => {
+  const date = new Date();
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+};
+
+const readLimits = (): Record<string, RateLimitRecord> => {
+  try {
+    const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    return value && typeof value === "object" ? value : {};
+  } catch { return {}; }
+};
 
 const Contact = () => {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [form, setForm] = useState<ContactForm>({ name: "", email: "", message: "" });
   const [isLoading, setIsLoading] = useState(false);
-  const [status, setStatus] = useState({ type: "", message: "" });
+  const [status, setStatus] = useState<ContactStatus>({ type: "", message: "" });
 
-  type RateLimitRecord = {
-    date: string; // YYYY-MM-DD in local time
-    count: number;
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
   };
 
-  const LOCAL_STORAGE_KEY = "contact_rate_limit";
-
-  const getTodayKey = (): string => {
-    const d = new Date();
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    return `${y}-${m}-${day}`;
-  };
-
-  const readLimitMap = (): Record<string, RateLimitRecord> => {
-    try {
-      const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (!raw) return {};
-      const parsed = JSON.parse(raw);
-      if (parsed && typeof parsed === "object")
-        return parsed as Record<string, RateLimitRecord>;
-      return {};
-    } catch {
-      return {};
-    }
-  };
-
-  const writeLimitMap = (data: Record<string, RateLimitRecord>) => {
-    try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
-    } catch {
-      // ignore write errors (storage full/disabled)
-    }
-  };
-
-  interface HandleChangeEvent extends React.ChangeEvent<
-    HTMLInputElement | HTMLTextAreaElement
-  > {}
-
-  const handleChange = (e: HandleChangeEvent) => {
-    const { name, value } = e.target;
-    setForm((prevForm: ContactForm) => ({ ...prevForm, [name]: value }));
-  };
-
-  const onSubmit = async (
-    e: React.FormEvent<HTMLFormElement>,
-  ): Promise<void> => {
-    e.preventDefault();
-    const { name, email, message } = form;
-
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const name = form.name.trim();
+    const email = form.email.trim();
+    const message = form.message.trim();
     if (!name || !email || !message) {
       setStatus({ type: "error", message: "Please fill in all fields." });
       return;
     }
 
-    // Rate limit: max 5 sends per day for this email
-    const today = getTodayKey();
-    const limitMap = readLimitMap();
-    const record = limitMap[email];
-    if (record && record.date === today && record.count >= 3) {
-      setStatus({
-        type: "error",
-        message:
-          "Daily limit reached for this email. Please try again tomorrow.",
-      });
+    const today = todayKey();
+    const limits = readLimits();
+    if (limits[email]?.date === today && limits[email].count >= 3) {
+      setStatus({ type: "error", message: "Daily limit reached for this email. Please try again tomorrow." });
       return;
     }
 
-    const serviceId: string | undefined = import.meta.env
-      .VITE_PUBLIC_EMAILJS_SERVICE_ID;
-    const templateId: string | undefined = import.meta.env
-      .VITE_PUBLIC_EMAILJS_TEMPLATE_ID;
-    const publicKey: string | undefined = import.meta.env
-      .VITE_PUBLIC_EMAILJS_PUBLIC_KEY;
-
+    const serviceId = import.meta.env.VITE_PUBLIC_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_PUBLIC_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_PUBLIC_EMAILJS_PUBLIC_KEY;
     if (!serviceId || !templateId || !publicKey) {
-      console.error("EmailJS environment variables are not set.");
-      setStatus({
-        type: "error",
-        message: "Configuration error. Could not send email.",
-      });
+      setStatus({ type: "error", message: "The form is unavailable right now. Please email me directly." });
       return;
     }
 
     setIsLoading(true);
     setStatus({ type: "", message: "" });
-
     try {
-      await emailjs.send(
-        serviceId,
-        templateId,
-        {
-          from_name: form.name,
-          to_name: "Yuben", // Or your name
-          from_email: form.email,
-          reply_to: form.email,
-          message: form.message,
-        },
-        publicKey,
-      );
-      setStatus({
-        type: "success",
-        message: "Message sent successfully! I'll get back to you soon.",
-      });
-      // Increment rate limit counter after successful send
-      const updated: Record<string, RateLimitRecord> = { ...limitMap };
-      const existing = updated[email];
-      if (existing && existing.date === today) {
-        updated[email] = {
-          date: today,
-          count: Math.min(existing.count + 1, 5),
-        };
-      } else {
-        updated[email] = { date: today, count: 1 };
-      }
-      writeLimitMap(updated);
+      await emailjs.send(serviceId, templateId, { from_name: name, to_name: "Yuben", from_email: email, reply_to: email, message }, publicKey);
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...limits, [email]: { date: today, count: limits[email]?.date === today ? limits[email].count + 1 : 1 } })); } catch { /* Storage may be disabled. */ }
       setForm({ name: "", email: "", message: "" });
-    } catch (error: unknown) {
-      console.error("FAILED...", error);
-      setStatus({
-        type: "error",
-        message: "Something went wrong. Please try again later.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+      setStatus({ type: "success", message: "Message sent. I'll get back to you soon." });
+    } catch {
+      setStatus({ type: "error", message: "The message couldn't be sent. Please try email instead." });
+    } finally { setIsLoading(false); }
   };
 
   return (
-    <div>
-      <div className="max-w-3xl">
-        <h1 className="text-3xl font-bold tracking-tight">
-          Let&apos;s Connect
-        </h1>
-
-        <p className="mt-2 text-neutral-400">
-          I’m always open to discussing new projects, creative ideas, or
-          opportunities to be part of an ambitious vision. Feel free to reach
-          out to Yuben Rizky Putra Bauty (Yuben).
-        </p>
-      </div>
-
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Left: Form */}
-        <div className="md:col-span-2 bg-neutral-900/50 border border-neutral-800 rounded-xl p-5 sm:p-6">
-          <form onSubmit={onSubmit} className="space-y-4">
-            <div className="space-y-1">
-              <label
-                htmlFor="name"
-                className="text-sm font-medium text-neutral-300"
-              >
-                Full Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                placeholder="John Doe"
-                className="w-full bg-neutral-800/60 border border-neutral-700 rounded-md px-3 py-2 text-white placeholder-neutral-500 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition"
-                required
-              />
-            </div>
-            <div className="space-y-1">
-              <label
-                htmlFor="email"
-                className="text-sm font-medium text-neutral-300"
-              >
-                Email Address
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder="you@example.com"
-                className="w-full bg-neutral-800/60 border border-neutral-700 rounded-md px-3 py-2 text-white placeholder-neutral-500 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition"
-                required
-              />
-            </div>
-            <div className="space-y-1">
-              <label
-                htmlFor="message"
-                className="text-sm font-medium text-neutral-300"
-              >
-                Message
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                value={form.message}
-                onChange={handleChange}
-                rows={6}
-                placeholder="Your message here..."
-                className="w-full bg-neutral-800/60 border border-neutral-700 rounded-md px-3 py-2 text-white placeholder-neutral-500 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition"
-                required
-              />
-            </div>
-            <div className="flex flex-col items-start gap-4 pt-2">
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-800 px-6 py-2.5 text-white font-semibold hover:bg-neutral-900 transition-colors disabled:bg-neutral-700 disabled:cursor-not-allowed"
-              >
-                {isLoading ? (
-                  <>
-                    <Loader className="animate-spin" size={18} />
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    <Send size={16} />
-                    Send Message
-                  </>
-                )}
-              </button>
-              {status.message && (
-                <div
-                  className={`flex items-center gap-2 text-sm p-3 rounded-md ${
-                    status.type === "success"
-                      ? "bg-green-900/40 text-green-300"
-                      : "bg-red-900/40 text-red-300"
-                  }`}
-                >
-                  {status.type === "success" ? (
-                    <CheckCircle size={16} />
-                  ) : (
-                    <AlertTriangle size={16} />
-                  )}
-                  {status.message}
-                </div>
-              )}
-            </div>
-          </form>
-        </div>
-
-        {/* Right: Contact info */}
-        <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-5 sm:p-6">
-          <h3 className="text-lg font-semibold">Contact Info</h3>
-          <p className="mt-2 text-sm text-neutral-400">
-            Prefer email? I usually respond within 1–2 business days.
-          </p>
-          <div className="mt-4">
-            <InteractiveButton
-              href="mailto:yubenbauty@gmail.com"
-              icon={<Mail size={16} />}
-            >
-              yubenbauty@gmail.com
-            </InteractiveButton>
-          </div>
-
-          <div className="mt-8">
-            <p className="text-sm font-medium text-neutral-300">Elsewhere</p>
-            <div className="mt-3 flex flex-wrap gap-4 text-sm">
-              <a
-                href="https://www.linkedin.com/in/yuben-bauty/"
-                className="text-neutral-400 hover:text-white transition-colors"
-                target="_blank"
-                rel="me noopener noreferrer"
-              >
-                LinkedIn
-              </a>
-              <a
-                href="https://github.com/yubenB/"
-                className="text-neutral-400 hover:text-white transition-colors"
-                target="_blank"
-                rel="me noopener noreferrer"
-              >
-                GitHub
-              </a>
-              <a
-                href="https://www.instagram.com/yuben.rpb"
-                className="text-neutral-400 hover:text-white transition-colors"
-                target="_blank"
-                rel="me noopener noreferrer"
-              >
-                Instagram
-              </a>
-            </div>
-          </div>
-        </div>
+    <div className="inner-page contact-page">
+      <div className="page-intro"><p className="section-kicker">Contact</p><h1>Let's talk about <em>what you're building.</em></h1><p>Have a workflow to automate, a platform to build, or a technical problem worth discussing? Send me a note.</p></div>
+      <div className="contact-layout">
+        <form onSubmit={onSubmit}>
+          <div className="form-field"><label htmlFor="name">Your name</label><input id="name" name="name" type="text" autoComplete="name" placeholder="Your name" value={form.name} onChange={handleChange} required /></div>
+          <div className="form-field"><label htmlFor="email">Email address</label><input id="email" name="email" type="email" autoComplete="email" placeholder="you@example.com" value={form.email} onChange={handleChange} required /></div>
+          <div className="form-field"><label htmlFor="message">What are you working on?</label><textarea id="message" name="message" rows={5} placeholder="Tell me a little about your project..." value={form.message} onChange={handleChange} required /></div>
+          <div><button className="button button-dark" type="submit" disabled={isLoading}>{isLoading ? "Sending..." : "Send message"}<ArrowUpRight size={18} strokeWidth={1.8} /></button></div>
+          {status.message && <p role="status" className={`contact-status ${status.type}`}>{status.message}</p>}
+        </form>
+        <aside className="contact-aside"><h2>Prefer your inbox?</h2><p>Email me directly, or connect on the platforms below.</p><a href="mailto:yubenbauty@gmail.com">yubenbauty@gmail.com ↗</a><a href="https://www.linkedin.com/in/yuben-bauty/" target="_blank" rel="me noopener noreferrer">LinkedIn ↗</a><a href="https://github.com/yubenB/" target="_blank" rel="me noopener noreferrer">GitHub ↗</a></aside>
       </div>
     </div>
   );

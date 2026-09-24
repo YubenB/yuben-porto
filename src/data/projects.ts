@@ -16,12 +16,12 @@ export const projects: Project[] = [
   {
     icon: Code,
     iconColor: "text-cyan-400",
-    title: "Hexa AI | On-Prem AI Infrastructure",
+    title: "Hexa.AI | Sovereign Enterprise AI Platform",
     slug: "hexa-ai",
-    category: "Agentic",
+    category: "Go & SvelteKit",
     logo: "/images/companies/hexacode_logo.png",
     description:
-      "Hexa is an AI-powered platform that automates document-heavy compliance and audit work for enterprise clients.",
+      "A sovereign control plane for building, governing, deploying, and operating reusable AI capabilities across on-premise and hybrid infrastructure.",
   },
   {
     icon: Code,

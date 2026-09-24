@@ -47,9 +47,9 @@ function personJsonLd() {
       "Yuben Putra Bauty",
     ],
     url: SITE_URL,
-    jobTitle: "Full-Stack Software Engineer",
+    jobTitle: "Full-Stack Developer and AI Automation Engineer",
     description:
-      "Yuben Rizky Putra Bauty (Yuben) is a Full-Stack Software Engineer and AI Agentic Engineer focused on integration-heavy platforms, agentic AI/RAG workflows, and high-concurrency backend systems.",
+      "Yuben Rizky Putra Bauty is a full-stack developer building enterprise AI workflows, automation, and reliable backend systems.",
     image: [PERSON_IMAGE],
     worksFor: {
       "@type": "Organization",
@@ -74,6 +74,7 @@ function personJsonLd() {
       "Go",
       "PHP",
       "Agentic AI",
+      "AI Automation",
       "RAG",
     ],
     sameAs: [
@@ -96,12 +97,12 @@ function homepageJsonLd(fullUrl: string) {
       alternateName: ["Yuben", "Yuben Bauty"],
       url: SITE_URL,
       image: [PERSON_IMAGE],
-      jobTitle: "Full-Stack Software Engineer",
+      jobTitle: "Full-Stack Developer and AI Automation Engineer",
     },
     url: fullUrl,
     name: `${PERSON_NAME} (Yuben) - Portfolio`,
     description:
-      "Official portfolio website of Yuben Rizky Putra Bauty (Yuben), Full-Stack Software Engineer.",
+      "Portfolio of Yuben Bauty, a full-stack developer focused on enterprise AI automation and reliable software systems.",
     inLanguage: "en",
   };
 }
@@ -295,19 +296,19 @@ function getMeta(url: string): SEO {
     case "/projects":
       return {
         title: `Projects | ${PERSON_NAME} (Yuben)`,
-        description: `${PERSON_NAME} (Yuben) - freelance and personal software engineering projects.`,
+        description: `${PERSON_NAME} (Yuben) - AI automation, full-stack platforms, backend systems, and mobile applications.`,
         canonical: fullUrl,
         og: {
           "og:type": "website",
           "og:title": `Projects | ${PERSON_NAME} (Yuben)`,
-          "og:description": `${PERSON_NAME} (Yuben) - freelance and personal software engineering projects.`,
+          "og:description": `${PERSON_NAME} (Yuben) - AI automation, full-stack platforms, backend systems, and mobile applications.`,
           "og:url": fullUrl,
           "og:site_name": SITE_NAME,
         },
         twitter: {
           "twitter:card": "summary",
           "twitter:title": `Projects | ${PERSON_NAME} (Yuben)`,
-          "twitter:description": `${PERSON_NAME} (Yuben) - freelance and personal software engineering projects.`,
+          "twitter:description": `${PERSON_NAME} (Yuben) - AI automation, full-stack platforms, backend systems, and mobile applications.`,
         },
         jsonLd: [personJsonLd(), websiteJsonLd()],
       };
@@ -371,14 +372,14 @@ function getMeta(url: string): SEO {
         jsonLd: [personJsonLd(), websiteJsonLd()],
       };
     default: {
-      const description = `Official portfolio of ${PERSON_NAME}, also known as ${PERSON_NICKNAME}. Full-Stack Software Engineer building agentic AI platforms, high-concurrency backend systems, and integration-heavy applications.`;
+      const description = `Portfolio of ${PERSON_NAME}, also known as ${PERSON_NICKNAME}. Full-stack developer building enterprise AI automation, reliable backend systems, and integration-heavy applications.`;
       return {
-        title: `${PERSON_NAME} (Yuben) | Full-Stack Software Engineer`,
+        title: `${PERSON_NAME} (Yuben) | Full-Stack Developer & AI Automation`,
         description,
         canonical: fullUrl,
         og: {
           "og:type": "profile",
-          "og:title": `${PERSON_NAME} (Yuben) | Full-Stack Software Engineer`,
+          "og:title": `${PERSON_NAME} (Yuben) | Full-Stack Developer & AI Automation`,
           "og:description": description,
           "og:url": fullUrl,
           "og:site_name": SITE_NAME,
@@ -388,7 +389,7 @@ function getMeta(url: string): SEO {
         },
         twitter: {
           "twitter:card": "summary",
-          "twitter:title": `${PERSON_NAME} (Yuben) | Full-Stack Software Engineer`,
+          "twitter:title": `${PERSON_NAME} (Yuben) | Full-Stack Developer & AI Automation`,
           "twitter:description": description,
           "twitter:image": PERSON_IMAGE,
         },
