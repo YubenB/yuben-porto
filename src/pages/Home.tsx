@@ -73,6 +73,9 @@ const Home = () => {
           {[
             "JavaScript",
             "TypeScript",
+            "Go",
+            "Python",
+            "PHP",
             "Node.js",
             "NestJS",
             "React",
@@ -82,7 +85,9 @@ const Home = () => {
             "Docker",
             "Kubernetes",
             "RabbitMQ",
-            "Go",
+            "Kafka",
+            "Agentic",
+            "RAG",
           ].map((tech) => (
             <span
               key={tech}

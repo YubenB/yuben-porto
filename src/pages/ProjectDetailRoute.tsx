@@ -4,7 +4,13 @@ import { projectsContent } from "../data/projectsContent";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
-import { ExternalLink } from "lucide-react";
+import {
+  ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+  X,
+} from "lucide-react";
 
 const ProjectDetailRoute = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -75,10 +81,11 @@ const ProjectDetailRoute = () => {
   return (
     <div className="space-y-6">
       <button
-        className="text-sm underline"
+        className="inline-flex items-center gap-2 text-sm underline underline-offset-4"
         onClick={() => navigate("/projects")}
       >
-        ← Back to Projects
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+        Back to Projects
       </button>
 
       <h1 className="text-3xl font-bold tracking-tight">
@@ -97,6 +104,11 @@ const ProjectDetailRoute = () => {
         </span>
       </h1>
       <div className="text-sm text-neutral-400">{project.category}</div>
+      {project.excerpt ? (
+        <p className="max-w-2xl text-base leading-relaxed text-neutral-300">
+          {project.excerpt}
+        </p>
+      ) : null}
 
       {/* Image Gallery */}
       {hasImages && (
@@ -120,7 +132,8 @@ const ProjectDetailRoute = () => {
                   src={src}
                   alt={`${project.title} screenshot ${i + 1}`}
                   className="w-full h-48 object-cover rounded-lg border border-neutral-800 transition-all duration-200 group-hover:border-neutral-600 group-hover:scale-[1.02]"
-                  loading="lazy"
+                  loading={i === 0 ? "eager" : "lazy"}
+                  fetchPriority={i === 0 ? "high" : "auto"}
                 />
                 <div className="pointer-events-none absolute inset-0 bg-black/0 group-hover:bg-black/10 rounded-lg transition-colors duration-200" />
               </div>
@@ -166,6 +179,9 @@ const ProjectDetailRoute = () => {
       {selectedImage && (
         <div
           className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-2 sm:p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${project.title} image preview`}
           onClick={(e) => {
             if (e.target === e.currentTarget) {
               closeModal();
@@ -177,8 +193,9 @@ const ProjectDetailRoute = () => {
             <button
               className="absolute -top-8 sm:-top-12 right-0 text-white hover:text-neutral-300 text-xl z-10 bg-black/50 rounded-full w-8 h-8 flex items-center justify-center"
               onClick={closeModal}
+              aria-label="Close image preview"
             >
-              ✕
+              <X className="h-5 w-5" aria-hidden="true" />
             </button>
 
             {/* Navigation buttons - hidden on very small screens */}
@@ -190,8 +207,9 @@ const ProjectDetailRoute = () => {
                     e.stopPropagation();
                     navigateImage("prev");
                   }}
+                  aria-label="Previous image"
                 >
-                  ‹
+                  <ChevronLeft className="h-6 w-6" aria-hidden="true" />
                 </button>
                 <button
                   className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 text-white hover:text-neutral-300 text-xl sm:text-2xl z-10 bg-black/50 rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center hover:bg-black/70 transition-colors"
@@ -199,8 +217,9 @@ const ProjectDetailRoute = () => {
                     e.stopPropagation();
                     navigateImage("next");
                   }}
+                  aria-label="Next image"
                 >
-                  ›
+                  <ChevronRight className="h-6 w-6" aria-hidden="true" />
                 </button>
               </>
             )}

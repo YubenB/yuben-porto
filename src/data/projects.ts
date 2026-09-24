@@ -25,6 +25,26 @@ export const projects: Project[] = [
   },
   {
     icon: Code,
+    iconColor: "text-violet-400",
+    title: "Hexa.Dashboard | Operational Intelligence",
+    slug: "hexa-dashboard",
+    category: "Go & SvelteKit",
+    logo: "/images/companies/hexacode_logo.png",
+    description:
+      "A self-hosted analytics workspace for governed metrics, spatial analysis, reusable dashboards, and evidence-backed AI insights.",
+  },
+  {
+    icon: Code,
+    iconColor: "text-emerald-400",
+    title: "Hexa.Sensor | Industrial IoT Platform",
+    slug: "hexa-sensor",
+    category: "Go & PostGIS",
+    logo: "/images/companies/hexacode_logo.png",
+    description:
+      "An on-premise IoT platform for ingesting field telemetry, monitoring fleets, detecting events, and managing operational alarms.",
+  },
+  {
+    icon: Code,
     iconColor: "text-cyan-400",
     title: "Simontana | Forest Monitoring App",
     slug: "simontana-forest-monitoring",
